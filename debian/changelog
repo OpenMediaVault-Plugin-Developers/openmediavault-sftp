@@ -1,0 +1,5 @@
+openmediavault-sftp (3.0) stable; urgency=low
+
+  * Initial release
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Wed, 14 Dec 2016 07:43:00 -0600

@@ -1,0 +1,15 @@
+Source: openmediavault-sftp
+Section: net
+XB-Plugin-Section: network
+Priority: optional
+Maintainer: OpenMediaVault Plugin Developers <plugins@omv-extras.org>
+Build-Depends: debhelper (>= 9.0.0 )
+Standards-Version: 3.9.6
+Homepage: http://omv-extras.org/
+
+Package: openmediavault-sftp
+Architecture: all
+Depends: openmediavault (>= 3.0.56),
+         ${misc:Depends}
+Description: sftp server
+ Configure sftp server using jails
