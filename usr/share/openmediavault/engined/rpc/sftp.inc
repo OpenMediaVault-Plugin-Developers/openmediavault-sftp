@@ -94,12 +94,13 @@ class OMVRpcServiceSftp extends \OMV\Rpc\ServiceAbstract
         // Get the configuration object.
         $db = \OMV\Config\Database::getInstance();
         $object = $db->get('conf.service.sftp.share', $params['uuid']);
-        // Umount path
+        // Umount path and remove directory
         $sfObject = $db->get('conf.system.sharedfolder', $object->get('sharedfolderref'));
-        $cmd = sprintf('export LANG=C; umount /sftp/%s/%s',
-            $object->get('username'), $sfObject->get('name'));
+        $dirName = sprintf('/sftp/%s/%s', $object->get('username'), $sfObject->get('name'));
+        $cmd = sprintf('export LANG=C; umount %s', $dirName);
         $process = new \OMV\System\Process($cmd);
         $process->execute($output, $result);
+        rmdir($dirName);
         // Delete the configuration object.
         $db->delete($object);
         // Apply changes immmediately
