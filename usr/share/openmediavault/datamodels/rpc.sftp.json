@@ -1,21 +1,29 @@
 [{
 	"type": "rpc",
-	"id": "rpc.sftp.setshare",
+	"id": "rpc.sftp.setsettings",
 	"params": {
 		"type": "object",
 		"properties": {
-			"uuid": {
-				"type": "string",
-				"format": "uuidv4",
+			"enable": {
+				"type": "boolean",
 				"required": true
 			},
-			"sharedfolderref": {
-				"type": "string",
-				"format": "uuidv4",
+			"port":{
+				"type": "integer",
+				"minimum": 1,
+				"maximum": 65535,
 				"required": true
 			},
-			"username": {
-			    "type": "string",
+			"passwordauthentication": {
+				"type": "boolean",
+				"required": true
+			},
+			"pubkeyauthentication": {
+				"type": "boolean",
+				"required": false
+			},
+			"extraoptions": {
+				"type": "string",
 				"required": true
 			}
 		}

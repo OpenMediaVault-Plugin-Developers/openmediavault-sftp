@@ -19,10 +19,92 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-set -e
+set -x
 
 . /etc/default/openmediavault
 . /usr/share/openmediavault/scripts/helper-functions
 
 omv-mkconf fstab
 mount -a
+
+OMV_SFTP_CONFIG=${OMV_SFTP_CONFIG:-"/etc/ssh/omv_sftp_config"}
+OMV_SFTP_PROTOCOL=${OMV_SFTP_PROTOCOL:-"2"}
+OMV_SFTP_USEPRIVILEGESEPARATION=${OMV_SFTP_USEPRIVILEGESEPARATION:-"yes"}
+OMV_SFTP_KEYREGENERATIONINTERVAL=${OMV_SFTP_KEYREGENERATIONINTERVAL:-"3600"}
+OMV_SFTP_SUBSYSTEM_SFTP=${OMV_SFTP_SUBSYSTEM_SFTP:-"internal-sftp"}
+OMV_SFTP_SERVERKEYBITS=${OMV_SFTP_SERVERKEYBITS:-"1024"}
+OMV_SFTP_SYSLOGFACILITY=${OMV_SFTP_SYSLOGFACILITY:-"AUTH"}
+OMV_SFTP_LOGLEVEL=${OMV_SFTP_LOGLEVEL:-"INFO"}
+OMV_SFTP_LOGINGRACETIME=${OMV_SFTP_LOGINGRACETIME:-"120"}
+OMV_SFTP_STRICTMODES=${OMV_SFTP_STRICTMODES:-"yes"}
+OMV_SFTP_RSAAUTHENTICATION=${OMV_SFTP_RSAAUTHENTICATION:-"yes"}
+OMV_SFTP_PUBKEYAUTHENTICATION=${OMV_SFTP_PUBKEYAUTHENTICATION:-"yes"}
+OMV_SFTP_IGNORERHOSTS=${OMV_SFTP_IGNORERHOSTS:-"yes"}
+OMV_SFTP_RHOSTSRSAAUTHENTICATION=${OMV_SFTP_RHOSTSRSAAUTHENTICATION:-"no"}
+OMV_SFTP_HOSTBASEDAUTHENTICATION=${OMV_SFTP_HOSTBASEDAUTHENTICATION:-"no"}
+OMV_SFTP_PERMITEMPTYPASSWORDS=${OMV_SFTP_PERMITEMPTYPASSWORDS:-"no"}
+OMV_SFTP_COMPRESSION=${OMV_SFTP_COMPRESSION:-"yes"}
+OMV_SFTP_CHALLENGERESPONSEAUTHENTICATION=${OMV_SFTP_CHALLENGERESPONSEAUTHENTICATION:-"no"}
+OMV_SFTP_PRINTMOTD=${OMV_SFTP_PRINTMOTD:-"no"}
+OMV_SFTP_PRINTLASTLOG=${OMV_SFTP_PRINTLASTLOG:-"yes"}
+OMV_SFTP_TCPKEEPALIVE=${OMV_SFTP_TCPKEEPALIVE:-"yes"}
+OMV_SFTP_ACCEPTENV=${OMV_SFTP_ACCEPTENV:-"LANG LC_*"}
+OMV_SFTP_USEPAM=${OMV_SFTP_USEPAM:-"yes"}
+OMV_SFTP_PERMITROOTLOGIN=${OMV_SFTP_PERMITROOTLOGIN:-"no"}
+OMV_SFTP_ADDRESSFAMILY=${OMV_SFTP_ADDRESSFAMILY:-"any"}
+OMV_SFTP_MATCHGROUP=${OMV_SFTP_MATCHGROUP:-"sftp-access"}
+OMV_SFTP_CHROOTDIR=${OMV_SFTP_CHROOTDIR:-"/sftp/%u"}
+OMV_SFTP_FORCECOMMAND=${OMV_SFTP_FORCECOMMAND:-"internal-sftp"}
+OMV_SFTP_AUTHORIZEDKEYSFILE_DIR=${OMV_SFTP_AUTHORIZEDKEYSFILE_DIR:-"/var/lib/openmediavault/ssh/authorized_keys"}
+OMV_SFTP_AUTHORIZEDKEYSFILE=${OMV_SFTP_AUTHORIZEDKEYSFILE:-".ssh/authorized_keys .ssh/authorized_keys2 ${OMV_SFTP_AUTHORIZEDKEYSFILE_DIR}/%u"}
+
+
+# Limit connections to IPv4 only if IPv6 is disabled.
+if [ ! -f /proc/net/if_inet6 ]; then
+	OMV_SFTP_ADDRESSFAMILY="inet"
+fi
+
+xmlstarlet sel -t \
+  -o "Protocol ${OMV_SFTP_PROTOCOL}" -n \
+  -o "HostKey /etc/ssh/ssh_host_rsa_key" -n \
+  -o "HostKey /etc/ssh/ssh_host_dsa_key" -n \
+  -o "HostKey /etc/ssh/ssh_host_ecdsa_key" -n \
+  -o "HostKey /etc/ssh/ssh_host_ed25519_key" -n \
+  -o "UsePrivilegeSeparation ${OMV_SFTP_USEPRIVILEGESEPARATION}" -n \
+  -o "KeyRegenerationInterval ${OMV_SFTP_KEYREGENERATIONINTERVAL}" -n \
+  -o "ServerKeyBits ${OMV_SFTP_SERVERKEYBITS}" -n \
+  -o "SyslogFacility ${OMV_SFTP_SYSLOGFACILITY}" -n \
+  -o "LogLevel ${OMV_SFTP_LOGLEVEL}" -n \
+  -o "LoginGraceTime ${OMV_SFTP_LOGINGRACETIME}" -n \
+  -o "StrictModes ${OMV_SFTP_STRICTMODES}" -n \
+  -o "RSAAuthentication ${OMV_SFTP_RSAAUTHENTICATION}" -n \
+  -o "PubkeyAuthentication ${OMV_SFTP_PUBKEYAUTHENTICATION}" -n \
+  -o "IgnoreRhosts ${OMV_SFTP_IGNORERHOSTS}" -n \
+  -o "RhostsRSAAuthentication ${OMV_SFTP_RHOSTSRSAAUTHENTICATION}" -n \
+  -o "HostbasedAuthentication ${OMV_SFTP_HOSTBASEDAUTHENTICATION}" -n \
+  -o "PermitEmptyPasswords ${OMV_SFTP_PERMITEMPTYPASSWORDS}" -n \
+  -o "ChallengeResponseAuthentication ${OMV_SFTP_CHALLENGERESPONSEAUTHENTICATION}" -n \
+  -o "PrintMotd ${OMV_SFTP_PRINTMOTD}" -n \
+  -o "PrintLastLog ${OMV_SFTP_PRINTLASTLOG}" -n \
+  -o "TCPKeepAlive ${OMV_SFTP_TCPKEEPALIVE}" -n \
+  -o "AcceptEnv ${OMV_SFTP_ACCEPTENV}" -n \
+  -o "Subsystem sftp ${OMV_SFTP_SUBSYSTEM_SFTP}" -n \
+  -o "UsePAM ${OMV_SFTP_USEPAM}" -n \
+  -o "PermitRootLogin ${OMV_SFTP_PERMITROOTLOGIN}" -n \
+  -o "AddressFamily ${OMV_SFTP_ADDRESSFAMILY}" -n \
+  -o "Compression ${OMV_SFTP_COMPRESSION}" -n \
+  -m "//services/sftp" \
+	  -v "concat('Port ',port)" -n \
+	  -i "passwordauthentication = 0" -o "PasswordAuthentication no" -n -b \
+	  -i "passwordauthentication = 1" -o "PasswordAuthentication yes" -n -b \
+	  -i "pubkeyauthentication = 0" -o "PubkeyAuthentication no" -n -b \
+	  -i "pubkeyauthentication = 1" \
+	    -o "AuthorizedKeysFile ${OMV_SFTP_AUTHORIZEDKEYSFILE}" -n \
+	    -o "PubkeyAuthentication yes" -n \
+	  -b \
+	  -i "string-length(extraoptions) > 0" -v "extraoptions" -n -b \
+  -o "Match Group ${OMV_SFTP_MATCHGROUP}" -n \
+  -o "  ChrootDirectory ${OMV_SFTP_CHROOTDIR}" -n \
+  -o "  ForceCommand ${OMV_SFTP_FORCECOMMAND}" -n \
+  -b \
+  ${OMV_CONFIG_FILE} | xmlstarlet unesc > ${OMV_SFTP_CONFIG}

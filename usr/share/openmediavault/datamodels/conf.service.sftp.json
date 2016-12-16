@@ -1,0 +1,58 @@
+{
+	"type": "config",
+	"id": "conf.service.sftp",
+	"title": "SFTP",
+	"queryinfo": {
+		"xpath": "//services/sftp",
+		"iterable": false
+	},
+	"properties": {
+		"enable": {
+			"type": "boolean",
+			"default": false
+		},
+		"port": {
+			"type": "integer",
+			"minimum": 1,
+			"maximum": 65535,
+			"default": 222
+		},
+		"passwordauthentication": {
+			"type": "boolean",
+			"default": true
+		},
+		"pubkeyauthentication": {
+			"type": "boolean",
+			"default": false
+		},
+		"extraoptions": {
+			"type": "string",
+			"default": ""
+		},
+		"shares": {
+			"type": "object",
+			"properties": {
+				"share": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"uuid": {
+								"type": "string",
+								"format": "uuidv4"
+							},
+							"sharedfolderref": {
+								"type": "string",
+								"format": "uuidv4"
+							},
+							"username": {
+								"type": "string",
+								"default": ""
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
