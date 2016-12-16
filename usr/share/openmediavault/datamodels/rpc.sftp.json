@@ -28,4 +28,26 @@
 			}
 		}
 	}
+},{
+	"type": "rpc",
+	"id": "rpc.sftp.setshare",
+	"params": {
+		"type": "object",
+		"properties": {
+			"uuid": {
+				"type": "string",
+				"format": "uuidv4",
+				"required": true
+			},
+			"sharedfolderref": {
+				"type": "string",
+				"format": "uuidv4",
+				"required": true
+			},
+			"username": {
+				"type": "string",
+				"default": ""
+			}
+		}
+	}
 }]
