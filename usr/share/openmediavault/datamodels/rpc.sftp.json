@@ -1,5 +1,35 @@
 [{
 	"type": "rpc",
+	"id": "rpc.sftp.setsettings",
+	"params": {
+		"type": "object",
+		"properties": {
+			"enable": {
+				"type": "boolean",
+				"required": true
+			},
+			"port":{
+				"type": "integer",
+				"minimum": 1,
+				"maximum": 65535,
+				"required": true
+			},
+			"passwordauthentication": {
+				"type": "boolean",
+				"required": true
+			},
+			"pubkeyauthentication": {
+				"type": "boolean",
+				"required": false
+			},
+			"extraoptions": {
+				"type": "string",
+				"required": true
+			}
+		}
+	}
+},{
+	"type": "rpc",
 	"id": "rpc.sftp.setshare",
 	"params": {
 		"type": "object",
@@ -15,8 +45,8 @@
 				"required": true
 			},
 			"username": {
-			    "type": "string",
-				"required": true
+				"type": "string",
+				"default": ""
 			}
 		}
 	}

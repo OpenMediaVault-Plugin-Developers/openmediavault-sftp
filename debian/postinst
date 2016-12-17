@@ -30,12 +30,15 @@ case "$1" in
         SERVICE_XPATH_NAME="sftp"
         SERVICE_XPATH="/config/services/${SERVICE_XPATH_NAME}"
 
-        omv_set_default "OMV_SSHD_SUBSYSTEM_SFTP" "internal-sftp"
-        omv_set_default "OMV_SSHD_ALLOWGROUPS" "root ssh sftp-access"
 
 
         if ! omv_config_exists "${SERVICE_XPATH}"; then
             omv_config_add_node "/config/services" "${SERVICE_XPATH_NAME}"
+            omv_config_add_key "${SERVICE_XPATH}" "enable" "0"
+            omv_config_add_key "${SERVICE_XPATH}" "port" "222"
+            omv_config_add_key "${SERVICE_XPATH}" "passwordauthentication" "1"
+            omv_config_add_key "${SERVICE_XPATH}" "pubkeyauthentication" "0"
+            omv_config_add_key "${SERVICE_XPATH}" "extraoptions" ""
             omv_config_add_node "${SERVICE_XPATH}" "shares"
         fi
 

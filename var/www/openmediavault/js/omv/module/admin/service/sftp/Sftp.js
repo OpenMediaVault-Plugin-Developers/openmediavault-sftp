@@ -23,7 +23,7 @@
 OMV.WorkspaceManager.registerNode({
     id      : "sftp",
     path    : "/service",
-    text    : _("sftp"),
+    text    : _("SFTP"),
     icon16  : "images/terminal.png",
     iconSvg : "images/terminal.svg"
 });

@@ -26,11 +26,45 @@ class OMVRpcServiceSftp extends \OMV\Rpc\ServiceAbstract
 
     public function initialize()
     {
+        $this->registerMethod('getSettings');
+        $this->registerMethod('setSettings');
         $this->registerMethod('getShareList');
         $this->registerMethod('getShare');
         $this->registerMethod('setShare');
         $this->registerMethod('deleteShare');
     }
+
+    public function getSettings($params, $context) {
+        // Validate the RPC caller context.
+        $this->validateMethodContext($context, [
+            "role" => OMV_ROLE_ADMINISTRATOR
+        ]);
+        // Get the configuration object.
+        $db = \OMV\Config\Database::getInstance();
+        $object = $db->get("conf.service.sftp");
+        return $object->getAssoc();
+    }
+
+    public function setSettings($params, $context) {
+        // Validate the RPC caller context.
+        $this->validateMethodContext($context, [
+            "role" => OMV_ROLE_ADMINISTRATOR
+        ]);
+        // Validate the parameters of the RPC service method.
+        $this->validateMethodParams($params, "rpc.sftp.setsettings");
+        // Get the existing configuration object.
+        $db = \OMV\Config\Database::getInstance();
+        $object = $db->get("conf.service.sftp");
+        $object->setAssoc($params);
+        // Set the configuration object.
+        $db->set($object);
+        // Remove useless properties from the object.
+        $object->remove("shares");
+        // Return the configuration object.
+        return $object->getAssoc();
+    }
+
+
 
     public function getShareList($params, $context)
     {
@@ -43,7 +77,7 @@ class OMVRpcServiceSftp extends \OMV\Rpc\ServiceAbstract
         $objects = $db->get('conf.service.sftp.share');
         // Add additional share informations.
         $objectsAssoc = [];
-        foreach ($objects as $objectk => &$objectv) {
+        foreach ($objects as $objectk => $objectv) {
             // Add the new property 'sharedfoldername'.
             $objectv->add('sharedfoldername', 'string', gettext("n/a"));
             // Get the shared folder configuration object.
