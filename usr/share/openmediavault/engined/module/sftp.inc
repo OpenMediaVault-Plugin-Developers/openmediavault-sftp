@@ -46,6 +46,19 @@ class OMVModuleSftp extends \OMV\Engine\Module\ServiceAbstract
         $systemCtl->enable(TRUE);
     }
 
+    public function getStatus()
+    {
+        $db = \OMV\Config\Database::getInstance();
+        $object = $db->get("conf.service.sftp");
+        $systemCtl = new \OMV\System\SystemCtl("omv-sftp");
+        return array(
+            "name" => $this->getName(),
+            "title" => gettext("SFTP"),
+            "enabled" => $object->get("enable"),
+            "running" => $systemCtl->isActive()
+        );
+    }
+
     public function applyConfig()
     {
         $cmd = new \OMV\System\Process('omv-mkconf', 'sftp');
