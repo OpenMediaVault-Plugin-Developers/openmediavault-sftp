@@ -19,13 +19,12 @@
  */
 
 class OMVModuleSftp extends \OMV\Engine\Module\ServiceAbstract
-    implements \OMV\Engine\Notify\IListener
+    implements \OMV\Engine\Notify\IListener, \OMV\Engine\Module\IServiceStatus
 {
     public function getName()
     {
         return 'sftp';
     }
-
 
     /**
      * Stop the managed service.

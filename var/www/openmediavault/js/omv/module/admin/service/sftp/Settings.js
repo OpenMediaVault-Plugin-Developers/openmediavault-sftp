@@ -26,60 +26,60 @@
  * @derived OMV.workspace.form.Panel
  */
 Ext.define("OMV.module.admin.service.sftp.Settings", {
-	extend: "OMV.workspace.form.Panel",
+    extend: "OMV.workspace.form.Panel",
 
-	rpcService: "SFTP",
-	rpcGetMethod: "getSettings",
-	rpcSetMethod: "setSettings",
+    rpcService: "SFTP",
+    rpcGetMethod: "getSettings",
+    rpcSetMethod: "setSettings",
 
-	getFormItems: function() {
-		return [{
-			xtype: "checkbox",
-			name: "enable",
-			fieldLabel: _("Enable"),
-			checked: false
-		},{
-			xtype: "numberfield",
-			name: "port",
-			fieldLabel: _("Port"),
-			vtype: "port",
-			minValue: 1,
-			maxValue: 65535,
-			allowDecimals: false,
-			allowBlank: false,
-			plugins: [{
-				ptype: "fieldinfo",
-				text: _("Port number. Choose a different one from the default ssh server")
-			}]
-		},{
-			xtype: "checkbox",
-			name: "passwordauthentication",
-			fieldLabel: _("Password authentication"),
-			checked: true,
-			boxLabel: _("Enable keyboard-interactive authentication")
-		},{
-			xtype: "checkbox",
-			name: "pubkeyauthentication",
-			fieldLabel: _("Public key authentication"),
-			checked: true,
-			boxLabel: _("Enable public key authentication")
-		},{
-			xtype: "textarea",
-			name: "extraoptions",
-			fieldLabel: _("Extra options"),
-			allowBlank: true,
-			plugins: [{
-				ptype: "fieldinfo",
-				text: _("Please check the <a href='http://www.openbsd.org/cgi-bin/man.cgi?query=sshd_config&sektion=5' target='_blank'>manual page</a> for more details."),
-			}]
-		}];
-	}
+    getFormItems: function() {
+        return [{
+            xtype: "checkbox",
+            name: "enable",
+            fieldLabel: _("Enable"),
+            checked: false
+        },{
+            xtype: "numberfield",
+            name: "port",
+            fieldLabel: _("Port"),
+            vtype: "port",
+            minValue: 1,
+            maxValue: 65535,
+            allowDecimals: false,
+            allowBlank: false,
+            plugins: [{
+                ptype: "fieldinfo",
+                text: _("Port number. Choose a different one from the default ssh server")
+            }]
+        },{
+            xtype: "checkbox",
+            name: "passwordauthentication",
+            fieldLabel: _("Password authentication"),
+            checked: true,
+            boxLabel: _("Enable keyboard-interactive authentication")
+        },{
+            xtype: "checkbox",
+            name: "pubkeyauthentication",
+            fieldLabel: _("Public key authentication"),
+            checked: true,
+            boxLabel: _("Enable public key authentication")
+        },{
+            xtype: "textarea",
+            name: "extraoptions",
+            fieldLabel: _("Extra options"),
+            allowBlank: true,
+            plugins: [{
+                ptype: "fieldinfo",
+                text: _("Please check the <a href='http://www.openbsd.org/cgi-bin/man.cgi?query=sshd_config&sektion=5' target='_blank'>manual page</a> for more details."),
+            }]
+        }];
+    }
 });
 
 OMV.WorkspaceManager.registerPanel({
-	id: "settings",
-	path: "/service/sftp",
-	text: _("Settings"),
-	position: 10,
-	className: "OMV.module.admin.service.sftp.Settings"
+    id: "settings",
+    path: "/service/sftp",
+    text: _("Settings"),
+    position: 10,
+    className: "OMV.module.admin.service.sftp.Settings"
 });

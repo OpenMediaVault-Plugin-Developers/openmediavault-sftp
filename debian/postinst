@@ -30,8 +30,6 @@ case "$1" in
         SERVICE_XPATH_NAME="sftp"
         SERVICE_XPATH="/config/services/${SERVICE_XPATH_NAME}"
 
-
-
         if ! omv_config_exists "${SERVICE_XPATH}"; then
             omv_config_add_node "/config/services" "${SERVICE_XPATH_NAME}"
             omv_config_add_key "${SERVICE_XPATH}" "enable" "0"
@@ -47,8 +45,8 @@ case "$1" in
         fi
 
         if deb-systemd-helper is-enabled ssh.service; then
-            omv-mkconf ssh
-            deb-systemd-invoke restart ssh.service >/dev/null || true
+            omv-mkconf sftp
+            deb-systemd-invoke restart omv-sftp.service >/dev/null || true
         fi
 
         dpkg-trigger update-fixperms

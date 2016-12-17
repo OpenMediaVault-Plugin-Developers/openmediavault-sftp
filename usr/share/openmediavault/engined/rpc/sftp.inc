@@ -64,8 +64,6 @@ class OMVRpcServiceSftp extends \OMV\Rpc\ServiceAbstract
         return $object->getAssoc();
     }
 
-
-
     public function getShareList($params, $context)
     {
         // Validate the RPC caller context.

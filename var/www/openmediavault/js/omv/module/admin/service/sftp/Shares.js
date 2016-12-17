@@ -162,6 +162,6 @@ OMV.WorkspaceManager.registerPanel({
     id        : "accesslist",
     path      : "/service/sftp",
     text      : _("Access List"),
-    position  : 10,
+    position  : 20,
     className : "OMV.module.admin.service.sftp.Shares"
 });
