@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # @license   http://www.gnu.org/licenses/gpl.html GPL Version 3
 # @author    Volker Theile <volker.theile@openmediavault.org>
@@ -31,7 +31,7 @@ OMV_SFTP_CONFIG=${OMV_SFTP_CONFIG:-"/etc/ssh/omv_sftp_config"}
 OMV_SFTP_PROTOCOL=${OMV_SFTP_PROTOCOL:-"2"}
 OMV_SFTP_USEPRIVILEGESEPARATION=${OMV_SFTP_USEPRIVILEGESEPARATION:-"yes"}
 OMV_SFTP_KEYREGENERATIONINTERVAL=${OMV_SFTP_KEYREGENERATIONINTERVAL:-"3600"}
-OMV_SFTP_SUBSYSTEM_SFTP=${OMV_SFTP_SUBSYSTEM_SFTP:-"internal-sftp"}
+OMV_SFTP_SUBSYSTEM_SFTP=${OMV_SFTP_SUBSYSTEM_SFTP:-"internal-sftp -l INFO"}
 OMV_SFTP_SERVERKEYBITS=${OMV_SFTP_SERVERKEYBITS:-"1024"}
 OMV_SFTP_SYSLOGFACILITY=${OMV_SFTP_SYSLOGFACILITY:-"AUTH"}
 OMV_SFTP_LOGLEVEL=${OMV_SFTP_LOGLEVEL:-"INFO"}
@@ -52,16 +52,18 @@ OMV_SFTP_ACCEPTENV=${OMV_SFTP_ACCEPTENV:-"LANG LC_*"}
 OMV_SFTP_USEPAM=${OMV_SFTP_USEPAM:-"yes"}
 OMV_SFTP_PERMITROOTLOGIN=${OMV_SFTP_PERMITROOTLOGIN:-"no"}
 OMV_SFTP_ADDRESSFAMILY=${OMV_SFTP_ADDRESSFAMILY:-"any"}
+OMV_SFTP_RSYSLOGCONF=${OMV_SFTP_RSYSLOGCONF:-"/etc/rsyslog.d/openmediavault-sftp.conf"}
+OMV_SFTP_LOGFILE=${OMV_SFTP_LOGFILE:-"/var/log/openmediavault-sftp.log"}
 OMV_SFTP_MATCHGROUP=${OMV_SFTP_MATCHGROUP:-"sftp-access"}
 OMV_SFTP_CHROOTDIR=${OMV_SFTP_CHROOTDIR:-"/sftp/%u"}
-OMV_SFTP_FORCECOMMAND=${OMV_SFTP_FORCECOMMAND:-"internal-sftp"}
+OMV_SFTP_FORCECOMMAND=${OMV_SFTP_FORCECOMMAND:-"internal-sftp -l INFO"}
 OMV_SFTP_AUTHORIZEDKEYSFILE_DIR=${OMV_SFTP_AUTHORIZEDKEYSFILE_DIR:-"/var/lib/openmediavault/ssh/authorized_keys"}
-OMV_SFTP_AUTHORIZEDKEYSFILE=${OMV_SFTP_AUTHORIZEDKEYSFILE:-".ssh/authorized_keys .ssh/authorized_keys2 ${OMV_SFTP_AUTHORIZEDKEYSFILE_DIR}/%u"}
+OMV_SFTP_AUTHORIZEDKEYSFILE=${OMV_SFTP_AUTHORIZEDKEYSFILE:-""${OMV_SFTP_AUTHORIZEDKEYSFILE_DIR}"/%u"}
 
 
 # Limit connections to IPv4 only if IPv6 is disabled.
 if [ ! -f /proc/net/if_inet6 ]; then
-	OMV_SFTP_ADDRESSFAMILY="inet"
+  OMV_SFTP_ADDRESSFAMILY="inet"
 fi
 
 xmlstarlet sel -t \
@@ -94,17 +96,49 @@ xmlstarlet sel -t \
   -o "AddressFamily ${OMV_SFTP_ADDRESSFAMILY}" -n \
   -o "Compression ${OMV_SFTP_COMPRESSION}" -n \
   -m "//services/sftp" \
-	  -v "concat('Port ',port)" -n \
-	  -i "passwordauthentication = 0" -o "PasswordAuthentication no" -n -b \
-	  -i "passwordauthentication = 1" -o "PasswordAuthentication yes" -n -b \
-	  -i "pubkeyauthentication = 0" -o "PubkeyAuthentication no" -n -b \
-	  -i "pubkeyauthentication = 1" \
-	    -o "AuthorizedKeysFile ${OMV_SFTP_AUTHORIZEDKEYSFILE}" -n \
-	    -o "PubkeyAuthentication yes" -n \
-	  -b \
-	  -i "string-length(extraoptions) > 0" -v "extraoptions" -n -b \
+    -v "concat('Port ',port)" -n \
+    -i "passwordauthentication = 0" -o "PasswordAuthentication no" -n -b \
+    -i "passwordauthentication = 1" -o "PasswordAuthentication yes" -n -b \
+    -i "pubkeyauthentication = 0" -o "PubkeyAuthentication no" -n -b \
+    -i "pubkeyauthentication = 1" \
+      -o "AuthorizedKeysFile ${OMV_SFTP_AUTHORIZEDKEYSFILE}" -n \
+      -o "PubkeyAuthentication yes" -n \
+    -b \
+    -i "string-length(extraoptions) > 0" -v "extraoptions" -n -b \
   -o "Match Group ${OMV_SFTP_MATCHGROUP}" -n \
   -o "  ChrootDirectory ${OMV_SFTP_CHROOTDIR}" -n \
   -o "  ForceCommand ${OMV_SFTP_FORCECOMMAND}" -n \
   -b \
   ${OMV_CONFIG_FILE} | xmlstarlet unesc > ${OMV_SFTP_CONFIG}
+
+
+### Create rsyslog configuration
+
+XPATH="/config/services/sftp"
+
+### Process sftp shares
+
+index=$(omv_config_get_count "//services/sftp/shares/share")
+
+while [ ${index} -gt 0 ]; do
+    username+=(`xmlstarlet sel -t -m "//services/sftp/shares/share[position()='${index}']" -v "username" "${OMV_CONFIG_FILE}"`)
+    index=$(( ${index} - 1 ))
+done
+
+### Clean duplicate names 
+name_array=(`echo "${username[@]}" | tr ' ' '\n' | sort -u | tr '\n' ' '`)
+
+echo "module(load=\"imuxsock\")" > ${OMV_SFTP_RSYSLOGCONF}
+
+###### Create log sockets for each user chroot 
+for name in "${name_array[@]}"
+do
+  echo "input(type=\"imuxsock\" Socket=\"/sftp/"${name}"/dev/log\" CreatePath=\"on\")" >> ${OMV_SFTP_RSYSLOGCONF}
+done
+######
+
+echo "if \$programname == 'internal-sftp' then $OMV_SFTP_LOGFILE"  >> ${OMV_SFTP_RSYSLOGCONF}
+echo "& stop" >> ${OMV_SFTP_RSYSLOGCONF}
+
+###Reload rsyslog
+systemctl restart rsyslog.service
