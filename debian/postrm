@@ -28,6 +28,8 @@ case "$1" in
     purge)
         # Remove the configuration data
         omv_config_delete "/config/services/sftp"
+        rm "/etc/rsyslog.d/openmediavault-sftp.log"
+        rm "/etc/ssh/omv_sftp_config"
     ;;
 
     remove|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
