@@ -116,26 +116,18 @@ xmlstarlet sel -t \
 
 XPATH="/config/services/sftp"
 
-### Process sftp shares
+# Process sftp shares
+echo "module(load=\"imuxsock\")" > ${OMV_SFTP_RSYSLOGCONF}
 
 index=$(omv_config_get_count "//services/sftp/shares/share")
 
 while [ ${index} -gt 0 ]; do
-    username+=(`xmlstarlet sel -t -m "//services/sftp/shares/share[position()='${index}']" -v "username" "${OMV_CONFIG_FILE}"`)
+    username=$(omv_config_get "${XPATH}/shares/share[position()=${index}]/username")
+    if ! grep -q "/sftp/${username}/dev/log" ${OMV_SFTP_RSYSLOGCONF}; then
+        echo "input(type=\"imuxsock\" Socket=\"/sftp/"${username}"/dev/log\" CreatePath=\"on\")" >> ${OMV_SFTP_RSYSLOGCONF}
+    fi
     index=$(( ${index} - 1 ))
 done
-
-### Clean duplicate names 
-name_array=(`echo "${username[@]}" | tr ' ' '\n' | sort -u | tr '\n' ' '`)
-
-echo "module(load=\"imuxsock\")" > ${OMV_SFTP_RSYSLOGCONF}
-
-###### Create log sockets for each user chroot 
-for name in "${name_array[@]}"
-do
-  echo "input(type=\"imuxsock\" Socket=\"/sftp/"${name}"/dev/log\" CreatePath=\"on\")" >> ${OMV_SFTP_RSYSLOGCONF}
-done
-######
 
 echo "if \$programname == 'internal-sftp' then $OMV_SFTP_LOGFILE"  >> ${OMV_SFTP_RSYSLOGCONF}
 echo "& stop" >> ${OMV_SFTP_RSYSLOGCONF}
