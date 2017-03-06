@@ -1,5 +1,6 @@
 openmediavault-sftp (3.0.3) stable; urgency=low
 
+  * Fix model name.
   * Mantis 0001688: JSON error when try to change privileges.
 
  -- Volker Theile <volker.theile@openmediavault.org>  Fri, 03 Mar 2017 13:16:45 +0100
