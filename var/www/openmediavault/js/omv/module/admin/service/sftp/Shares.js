@@ -3,7 +3,7 @@
  * @author    Volker Theile <volker.theile@openmediavault.org>
  * @author    OpenMediaVault Plugin Developers <plugins@omv-extras.org>
  * @copyright Copyright (c) 2009-2013 Volker Theile
- * @copyright Copyright (c) 2013-2016 OpenMediaVault Plugin Developers
+ * @copyright Copyright (c) 2013-2017 OpenMediaVault Plugin Developers
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -77,11 +77,13 @@ Ext.define("OMV.module.admin.service.sftp.Shares", {
     stateful          : true,
     stateId           : "1235057b-b2c0-4c48-a4c1-8c9b4fb54d7b",
     columns           : [{
+        xtype     : "textcolumn",
         text      : _("Username"),
         sortable  : true,
         dataIndex : "username",
         stateId   : "username"
     },{
+        xtype     : "textcolumn",
         text      : _("Shared Folder"),
         sortable  : true,
         dataIndex : "sharedfoldername",
