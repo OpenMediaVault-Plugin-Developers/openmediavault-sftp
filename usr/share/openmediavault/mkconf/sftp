@@ -105,7 +105,7 @@ xmlstarlet sel -t \
       -o "PubkeyAuthentication yes" -n \
     -b \
     -i "string-length(extraoptions) > 0" -v "extraoptions" -n -b \
-    -i "allowgroups = 1" -o "AllowGroups  ${OMV_SFTP_MATCHGROUP}" -n -b \
+    -i "allowgroups = 1" -o "AllowGroups ${OMV_SFTP_MATCHGROUP}" -n -b \
   -o "Match Group ${OMV_SFTP_MATCHGROUP}" -n \
   -o "  ChrootDirectory ${OMV_SFTP_CHROOTDIR}" -n \
   -o "  X11Forwarding no" -n \
