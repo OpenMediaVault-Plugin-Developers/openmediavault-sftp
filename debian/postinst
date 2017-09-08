@@ -4,7 +4,7 @@
 # @author    Volker Theile <volker.theile@openmediavault.org>
 # @author    OpenMediaVault Plugin Developers <plugins@omv-extras.org>
 # @copyright Copyright (c) 2009-2013 Volker Theile
-# @copyright Copyright (c) 2013-2016 OpenMediaVault Plugin Developers
+# @copyright Copyright (c) 2013-2017 OpenMediaVault Plugin Developers
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -24,33 +24,29 @@ set -e
 . /etc/default/openmediavault
 . /usr/share/openmediavault/scripts/helper-functions
 
+OMV_SFTP_MATCHGROUP=${OMV_SFTP_MATCHGROUP:-"sftp-access"}
+
 case "$1" in
     configure)
+        # Activate package triggers.
+        dpkg-trigger update-fixperms
+        dpkg-trigger update-locale
 
-        SERVICE_XPATH_NAME="sftp"
-        SERVICE_XPATH="/config/services/${SERVICE_XPATH_NAME}"
-
-        if ! omv_config_exists "${SERVICE_XPATH}"; then
-            omv_config_add_node "/config/services" "${SERVICE_XPATH_NAME}"
-            omv_config_add_key "${SERVICE_XPATH}" "enable" "0"
-            omv_config_add_key "${SERVICE_XPATH}" "port" "222"
-            omv_config_add_key "${SERVICE_XPATH}" "passwordauthentication" "1"
-            omv_config_add_key "${SERVICE_XPATH}" "pubkeyauthentication" "0"
-            omv_config_add_key "${SERVICE_XPATH}" "extraoptions" ""
-            omv_config_add_node "${SERVICE_XPATH}" "shares"
+        # Initialize and migrate configuration database.
+        echo "Updating configuration database ..."
+        omv-confdbadm create "conf.service.sftp"
+        if [ -n "$2" ]; then
+            omv-confdbadm migrate "conf.service.sftp" "${2}"
         fi
 
-        if ! getent group sftp-access >/dev/null 2>&1; then
-            groupadd sftp-access
+        if ! getent group ${OMV_SFTP_MATCHGROUP} >/dev/null 2>&1; then
+            groupadd ${OMV_SFTP_MATCHGROUP}
         fi
 
         if deb-systemd-helper is-enabled ssh.service; then
             omv-mkconf sftp
             deb-systemd-invoke restart omv-sftp.service >/dev/null || true
         fi
-
-        dpkg-trigger update-fixperms
-        dpkg-trigger update-locale
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)

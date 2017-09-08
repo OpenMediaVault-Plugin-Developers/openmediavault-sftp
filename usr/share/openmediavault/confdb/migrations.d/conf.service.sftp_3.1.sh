@@ -21,27 +21,13 @@
 
 set -e
 
-. /etc/default/openmediavault
 . /usr/share/openmediavault/scripts/helper-functions
 
-case "$1" in
-    purge)
-        # Remove config and log files
-        if [ -f "/etc/rsyslog.d/openmediavault-sftp.log" ]; then
-            rm "/etc/rsyslog.d/openmediavault-sftp.log"
-        fi
-        if [ -f "/etc/ssh/omv_sftp_config" ]; then
-            rm "/etc/ssh/omv_sftp_config"
-        fi
-    ;;
+SERVICE_XPATH_NAME="sftp"
+SERVICE_XPATH="/config/services/${SERVICE_XPATH_NAME}"
 
-    remove|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
-    ;;
-
-    *)
-        echo "postrm called with unknown argument '$1'" >&2
-        exit 1
-    ;;
-esac
+if ! omv_config_exists "${SERVICE_XPATH}/allowgroups"; then
+    omv_config_add_key "${SERVICE_XPATH}" "allowgroups" "0"
+fi
 
 exit 0

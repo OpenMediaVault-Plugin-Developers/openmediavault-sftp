@@ -65,6 +65,12 @@ Ext.define("OMV.module.admin.service.sftp.Settings", {
             checked: true,
             boxLabel: _("Enable public key authentication")
         },{
+            xtype: "checkbox",
+            name: "allowgroups",
+            fieldLabel: _("AllowGroups"),
+            checked: false,
+            boxLabel: _("Allow access to sftp-access group only")
+        },{
             xtype: "textarea",
             name: "extraoptions",
             fieldLabel: _("Extra options"),
