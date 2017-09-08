@@ -42,19 +42,18 @@ while [ ${index} -gt 0 ]; do
     username=$(omv_config_get "${XPATH}/shares/share[position()=${index}]/username")
     perms=$(xmlstarlet sel -t -m "//system/shares/sharedfolder[uuid='${sfref}']/privileges/privilege[name='${username}']" -v perms ${OMV_CONFIG_FILE})
 
+    index=$(( ${index} - 1 ))
+
     if [ ${perms} -eq 7 ]; then
         option="rw"
     elif [ ${perms} -eq 5 ]; then
         option="ro"
     else
-        option=""
+        continue
     fi
 
     if [ -n "${sfpath}" ] && [ -n "${username}" ] && [ -n "${option}" ]; then
-
         mkdir -p "/sftp/${username}/${sfname}"
         echo "${sfpath2} /sftp/${username}/${sfname2} none bind,${option} 0 0"
     fi
-
-    index=$(( ${index} - 1 ))
 done
