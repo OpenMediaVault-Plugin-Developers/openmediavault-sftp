@@ -47,10 +47,10 @@ while [ ${index} -gt 0 ]; do
     elif [ ${perms} -eq 5 ]; then
         option="ro"
     else
-        continue
+        option=""
     fi
 
-    if [ -n "${sfpath}" ] && [ -n "${username}" ]; then
+    if [ -n "${sfpath}" ] && [ -n "${username}" ] && [ -n "${option}" ]; then
 
         mkdir -p "/sftp/${username}/${sfname}"
         echo "${sfpath2} /sftp/${username}/${sfname2} none bind,${option} 0 0"
