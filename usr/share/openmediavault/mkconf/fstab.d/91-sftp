@@ -24,6 +24,8 @@ set -e
 . /etc/default/openmediavault
 . /usr/share/openmediavault/scripts/helper-functions
 
+declare -i perms
+
 XPATH="/config/services/sftp"
 
 # Process sftp shares
@@ -40,7 +42,8 @@ while [ ${index} -gt 0 ]; do
     sfname2=${sfname// /\\040}
 
     username=$(omv_config_get "${XPATH}/shares/share[position()=${index}]/username")
-    perms=$(xmlstarlet sel -t -m "//system/shares/sharedfolder[uuid='${sfref}']/privileges/privilege[name='${username}']" -v perms ${OMV_CONFIG_FILE})
+    path="//system/shares/sharedfolder[uuid='${sfref}']/privileges/privilege[name='${username}']"
+    perms=$(xmlstarlet sel -t -m ${path} -v perms ${OMV_CONFIG_FILE} || true)
 
     index=$(( ${index} - 1 ))
 
