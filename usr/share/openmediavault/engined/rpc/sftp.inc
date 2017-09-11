@@ -37,29 +37,29 @@ class OMVRpcServiceSftp extends \OMV\Rpc\ServiceAbstract
     public function getSettings($params, $context) {
         // Validate the RPC caller context.
         $this->validateMethodContext($context, [
-            "role" => OMV_ROLE_ADMINISTRATOR
+            'role' => OMV_ROLE_ADMINISTRATOR
         ]);
         // Get the configuration object.
         $db = \OMV\Config\Database::getInstance();
-        $object = $db->get("conf.service.sftp");
+        $object = $db->get('conf.service.sftp');
         return $object->getAssoc();
     }
 
     public function setSettings($params, $context) {
         // Validate the RPC caller context.
         $this->validateMethodContext($context, [
-            "role" => OMV_ROLE_ADMINISTRATOR
+            'role' => OMV_ROLE_ADMINISTRATOR
         ]);
         // Validate the parameters of the RPC service method.
-        $this->validateMethodParams($params, "rpc.sftp.setsettings");
+        $this->validateMethodParams($params, 'rpc.sftp.setsettings');
         // Get the existing configuration object.
         $db = \OMV\Config\Database::getInstance();
-        $object = $db->get("conf.service.sftp");
+        $object = $db->get('conf.service.sftp');
         $object->setAssoc($params);
         // Set the configuration object.
         $db->set($object);
         // Remove useless properties from the object.
-        $object->remove("shares");
+        $object->remove('shares');
         // Return the configuration object.
         return $object->getAssoc();
     }
@@ -107,11 +107,28 @@ class OMVRpcServiceSftp extends \OMV\Rpc\ServiceAbstract
         $this->validateMethodContext($context, ['role' => OMV_ROLE_ADMINISTRATOR]);
         // Validate the parameters of the RPC service method.
         $this->validateMethodParams($params, 'rpc.sftp.setshare');
+        // Get the shared folder configuration object.
+        $db = \OMV\Config\Database::getInstance();
+        // Check to see if user has read only or read/write privileges
+        // If not, exit with error
+        $perms = 0;
+        $objectSF = $db->get('conf.system.sharedfolder', $params['sharedfolderref']);
+        foreach ($objectSF->get('privileges.privilege') as $objectv) {
+            if ($objectv['name'] === $params['username']) {
+                $perms = intval($objectv['perms']);
+                break;
+            }
+        }
+        if (($perms !== 5) && ($perms !== 7)) {
+            throw new \OMV\Exception(
+                "'%s' does not have read only or read/write privileges to this shared folder.",
+                $params['username']
+            );
+        }
         // Prepare the configuration object.
         $object = new \OMV\Config\ConfigObject('conf.service.sftp.share');
         $object->setAssoc($params);
         // Set the configuration object.
-        $db = \OMV\Config\Database::getInstance();
         $db->set($object);
         // Return the configuration object.
         return $object->getAssoc();
@@ -129,13 +146,11 @@ class OMVRpcServiceSftp extends \OMV\Rpc\ServiceAbstract
         // Umount path
         $sfObject = $db->get('conf.system.sharedfolder', $object->get('sharedfolderref'));
         $dirName = sprintf('/sftp/%s/%s', $object->get('username'), $sfObject->get('name'));
-        $cmd = sprintf('export LANG=C; umount "%s"', $dirName);
-        $process = new \OMV\System\Process($cmd);
-        $process->execute($output, $result);
-        // Remove directory
-        $cmd = sprintf('export LANG=C; rm -rf "%s"', $dirName);
-        $process = new \OMV\System\Process($cmd);
-        $process->execute($output, $result);
+        if (file_exists($dirName)) {
+            $cmd = sprintf('omv-removesftpmount "%s"', $dirName);
+            $process = new \OMV\System\Process($cmd);
+            $process->execute($output, $result);
+        }
         // Delete the configuration object.
         $db->delete($object);
         // Apply changes immmediately

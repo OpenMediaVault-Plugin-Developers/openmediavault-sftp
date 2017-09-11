@@ -1,3 +1,9 @@
+openmediavault-sftp (3.1.2) stable; urgency=low
+
+  * Fix delete share bug
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Sun, 10 Sep 2017 20:44:14 -0500
+
 openmediavault-sftp (3.1.1) stable; urgency=low
 
   * Fix bug when user has no permissions - github issue #7

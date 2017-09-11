@@ -1,0 +1,14 @@
+#!/bin/bash
+
+mp=$1
+
+if [ ${mp::6} = "/sftp/"  ]; then
+  # Check if directory is mounted
+  if mountpoint -q "${mp}"; then
+    # Unmount directory
+    if umount "${mp}"; then
+      # Remove directory
+      rm -rf "${mp}"
+    fi
+  fi
+fi
