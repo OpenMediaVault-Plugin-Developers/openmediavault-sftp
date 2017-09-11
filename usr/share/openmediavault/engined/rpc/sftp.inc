@@ -113,10 +113,12 @@ class OMVRpcServiceSftp extends \OMV\Rpc\ServiceAbstract
         // If not, exit with error
         $perms = 0;
         $objectSF = $db->get('conf.system.sharedfolder', $params['sharedfolderref']);
-        foreach ($objectSF->get('privileges.privilege') as $objectv) {
-            if ($objectv['name'] === $params['username']) {
-                $perms = intval($objectv['perms']);
-                break;
+        if (FALSE === $objectSF->isEmpty('privileges')) {
+            foreach ($objectSF->get('privileges.privilege') as $objectv) {
+                if ($objectv['name'] === $params['username']) {
+                    $perms = intval($objectv['perms']);
+                    break;
+                }
             }
         }
         if (($perms !== 5) && ($perms !== 7)) {
