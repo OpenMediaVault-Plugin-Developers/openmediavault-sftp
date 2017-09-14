@@ -43,20 +43,23 @@ while [ ${index} -gt 0 ]; do
 
     username=$(omv_config_get "${XPATH}/shares/share[position()=${index}]/username")
     path="//system/shares/sharedfolder[uuid='${sfref}']/privileges/privilege[name='${username}']"
-    perms=$(xmlstarlet sel -t -m ${path} -v perms ${OMV_CONFIG_FILE} || true)
 
     index=$(( ${index} - 1 ))
 
-    if [ ${perms} -eq 7 ]; then
-        option="rw"
-    elif [ ${perms} -eq 5 ]; then
-        option="ro"
-    else
-        continue
-    fi
+    if [ -n "${sfname2}" ] && [ -n "${sfpath}" ] && [ -n "${username}" ]; then
+        perms=$(xmlstarlet sel -t -m ${path} -v perms ${OMV_CONFIG_FILE} || true)
+        sftppath="/sftp/${username}/${sfname2}"
 
-    if [ -n "${sfpath}" ] && [ -n "${username}" ] && [ -n "${option}" ]; then
-        mkdir -p "/sftp/${username}/${sfname}"
-        echo "${sfpath2} /sftp/${username}/${sfname2} none bind,${option} 0 0"
+        if [ ${perms} -eq 7 ]; then
+            option="rw"
+        elif [ ${perms} -eq 5 ]; then
+            option="ro"
+        else
+            omv-removesftpmount "${sftppath}"
+            continue
+        fi
+
+        mkdir -p "${sftppath}"
+        echo "${sfpath2} ${sftppath} none bind,${option} 0 0"
     fi
 done
