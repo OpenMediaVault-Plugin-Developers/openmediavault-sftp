@@ -60,6 +60,6 @@ while [ ${index} -gt 0 ]; do
         fi
 
         mkdir -p "${sftppath}"
-        echo "${sfpath2} ${sftppath} none bind,${option} 0 0"
+        echo "${sfpath2} ${sftppath} none bind,${option},nofail 0 0"
     fi
 done

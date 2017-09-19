@@ -25,7 +25,7 @@ set -e
 . /usr/share/openmediavault/scripts/helper-functions
 
 omv-mkconf fstab
-mount -a
+mount -a || true
 
 OMV_SFTP_CONFIG=${OMV_SFTP_CONFIG:-"/etc/ssh/omv_sftp_config"}
 OMV_SFTP_PROTOCOL=${OMV_SFTP_PROTOCOL:-"2"}
