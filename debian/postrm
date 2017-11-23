@@ -26,6 +26,8 @@ set -e
 
 case "$1" in
     purge)
+        omv_config_delete "/config/services/sftp"
+
         # Remove config and log files
         if [ -f "/etc/rsyslog.d/openmediavault-sftp.log" ]; then
             rm "/etc/rsyslog.d/openmediavault-sftp.log"
