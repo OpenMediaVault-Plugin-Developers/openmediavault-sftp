@@ -2,7 +2,7 @@
 
 /**
  * Copyright (C) 2009-2013 Volker Theile <volker.theile@openmediavault.org>
- * Copyright (C) 2013-2017 OpenMediaVault Plugin Developers
+ * Copyright (C) 2013-2019 OpenMediaVault Plugin Developers
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,26 +26,6 @@ class OMVModuleSftp extends \OMV\Engine\Module\ServiceAbstract
         return 'sftp';
     }
 
-    /**
-     * Stop the managed service.
-     */
-    public function stopService() {
-        $systemCtl = new \OMV\System\SystemCtl("omv-sftp");
-        $systemCtl->disable(TRUE);
-    }
-
-    /**
-     * Start the managed service.
-     */
-    public function startService() {
-        $db = \OMV\Config\Database::getInstance();
-        $object = $db->get("conf.service.sftp");
-        if (TRUE !== $object->get("enable"))
-            return;
-        $systemCtl = new \OMV\System\SystemCtl("omv-sftp");
-        $systemCtl->enable(TRUE);
-    }
-
     public function getStatus()
     {
         $db = \OMV\Config\Database::getInstance();
@@ -57,13 +37,6 @@ class OMVModuleSftp extends \OMV\Engine\Module\ServiceAbstract
             "enabled" => $object->get("enable"),
             "running" => $systemCtl->isActive()
         );
-    }
-
-    public function applyConfig()
-    {
-        $cmd = new \OMV\System\Process('omv-mkconf', 'sftp');
-        $cmd->setRedirect2to1();
-        $cmd->execute();
     }
 
     final public function onSharedFolder($type, $path, $object)

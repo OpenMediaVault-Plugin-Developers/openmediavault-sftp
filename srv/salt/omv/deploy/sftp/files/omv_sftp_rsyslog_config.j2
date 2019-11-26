@@ -1,0 +1,7 @@
+{% set logFile = salt['pillar.get']('default:OMV_SFTP_LOGFILE', '/var/log/openmediavault-sftp.log') -%}
+module(load="imuxsock")
+{% for share in config.shares.share %}
+input(type="imuxsock" Socket="/sftp/{{ share.username }}/dev/log" CreatePath="on")
+{% endfor %}
+if $programname == 'internal-sftp' then {{ logFile }}
+& stop

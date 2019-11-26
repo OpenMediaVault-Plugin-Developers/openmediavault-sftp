@@ -1,0 +1,71 @@
+{% set protocol = salt['pillar.get']('default:OMV_SFTPD_PROTOCOL', '2') -%}
+{% set syslogFacility = salt['pillar.get']('default:OMV_SFTP_SYSLOGFACILITY', 'AUTH') -%}
+{% set logLevel = salt['pillar.get']('default:OMV_SFTP_LOGLEVEL', 'INFO') -%}
+{% set loginGraceTime = salt['pillar.get']('default:OMV_SFTP_LOGINGRACETIME', '120') -%}
+{% set strictModes = salt['pillar.get']('default:OMV_SFTP_STRICTMODES', 'yes') -%}
+{% set pubkeyAuth = salt['pillar.get']('default:OMV_SFTP_PUBKEYAUTHENTICATION', 'yes') -%}
+{% set ignoreRhosts = salt['pillar.get']('default:OMV_SFTP_IGNORERHOSTS', 'yes') -%}
+{% set hostbasedAuth = salt['pillar.get']('default:OMV_SFTP_HOSTBASEDAUTHENTICATION', 'no') -%}
+{% set permitEmptyPasswords = salt['pillar.get']('default:OMV_SFTP_PERMITEMPTYPASSWORDS', 'no') -%}
+{% set compression = salt['pillar.get']('default:OMV_SFTP_COMPRESSION', 'yes') -%}
+{% set challengeResponseAuth = salt['pillar.get']('default:OMV_SFTP_CHALLENGERESPONSEAUTHENTICATION', 'no') -%}
+{% set printMotd = salt['pillar.get']('default:OMV_SFTP_PRINTMOTD', 'no') -%}
+{% set printLastLog = salt['pillar.get']('default:OMV_SFTP_PRINTLASTLOG', 'yes') -%}
+{% set tcpKeepAlive = salt['pillar.get']('default:OMV_SFTP_TCPKEEPALIVE', 'yes') -%}
+{% set acceptEnv = salt['pillar.get']('default:OMV_SFTP_ACCEPTENV', 'LANG LC_*') -%}
+{% set subsystemSftp = salt['pillar.get']('default:OMV_SFTP_SUBSYSTEM_SFTP', 'internal-sftp -l INFO') -%}
+{% set usePAM = salt['pillar.get']('default:OMV_SFTP_USEPAM', 'yes') -%}
+{% set authorizedKeysFileDir = salt['pillar.get']('default:OMV_SFTP_AUTHORIZEDKEYSFILE_DIR', '/var/lib/openmediavault/ssh/authorized_keys') -%}
+{% set authorizedKeysFile = salt['pillar.get']('default:OMV_SFTP_AUTHORIZEDKEYSFILE', '.ssh/authorized_keys .ssh/authorized_keys2 ' ~  authorizedKeysFileDir ~ '/%u') -%}
+{% set sftpSubsystem = salt['pillar.get']('default:OMV_SFTP_SUBSYSTEM_SFTP', 'internal-sftp -l INFO') -%}
+{% set usePam = salt['pillar.get']('default:OMV_SFTP_USEPAM', 'yes') -%}
+{% set addressFamily = salt['pillar.get']('default:OMV_SFTP_ADDRESSFAMILY', 'any') -%}
+{% set rsyslogConf = salt['pillar.get']('default:OMV_SFTP_RSYSLOGCONF', '/etc/rsyslog.d/openmediavault-sftp.conf') -%}
+{% set logFile = salt['pillar.get']('default:OMV_SFTP_LOGFILE', '/var/log/openmediavault-sftp.log') -%}
+{% set matchGroup = salt['pillar.get']('default:OMV_SFTP_MATCHGROUP', 'sftp-access') -%}
+{% set chrootDir = salt['pillar.get']('default:OMV_SFTP_CHROOTDIR', '/sftp/%u') -%}
+{% set forceCmd = salt['pillar.get']('default:OMV_SFTP_FORCECOMMAND', 'internal-sftp -l INFO') -%}
+{% set rootLogin = salt['pillar.get']('default:OMV_SFTP_PERMITROOTLOGIN', 'no') -%}
+
+Protocol {{ protocol }}
+HostKey /etc/ssh/ssh_host_rsa_key
+HostKey /etc/ssh/ssh_host_dsa_key
+HostKey /etc/ssh/ssh_host_ecdsa_key
+HostKey /etc/ssh/ssh_host_ed25519_key
+SyslogFacility {{ syslogFacility }}
+LogLevel {{ logLevel }}
+LoginGraceTime {{ loginGraceTime }}
+StrictModes {{ strictModes }}
+PubkeyAuthentication {{ pubkeyAuth }}
+IgnoreRhosts {{ ignoreRhosts }}
+HostbasedAuthentication {{ hostbasedAuth }}
+PermitEmptyPasswords {{ permitEmptyPasswords }}
+ChallengeResponseAuthentication {{ challengeResponseAuth }}
+PrintMotd {{ printMotd }}
+PrintLastLog {{ printLastLog }}
+TCPKeepAlive {{ tcpKeepAlive }}
+AcceptEnv {{ acceptEnv }}
+Subsystem sftp {{ subsystemSftp }}
+UsePAM {{ usePAM }}
+Port {{ config.port }}
+PermitRootLogin {{ 'yes' if rootLogin else 'no' }}
+Compression {{ 'yes' if compression else 'no' }}
+PasswordAuthentication {{ 'yes' if config.passwordauthentication else 'no' }}
+PubkeyAuthentication {{ 'yes' if config.pubkeyauthentication else 'no' }}
+AuthorizedKeysFile {{ authorizedKeysFile }}
+{% if salt['omv_utils.is_ipv6_enabled']() %}
+AddressFamily any
+{% else -%}
+AddressFamily inet
+{% endif -%}
+{% if config.extraoptions | length > 0 -%}
+{{ config.extraoptions }}
+{% endif -%}
+{% if config.allowgroups -%}
+AllowGroups {{ matchGroup }}
+{% endif -%}
+Match Group {{ matchGroup }}
+  ChrootDirectory {{ chrootDir }}
+  X11Forwarding no
+  AllowTcpForwarding no
+  ForceCommand {{ forceCmd }}

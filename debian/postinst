@@ -4,7 +4,7 @@
 # @author    Volker Theile <volker.theile@openmediavault.org>
 # @author    OpenMediaVault Plugin Developers <plugins@omv-extras.org>
 # @copyright Copyright (c) 2009-2013 Volker Theile
-# @copyright Copyright (c) 2013-2017 OpenMediaVault Plugin Developers
+# @copyright Copyright (c) 2013-2019 OpenMediaVault Plugin Developers
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -43,10 +43,7 @@ case "$1" in
             groupadd ${OMV_SFTP_MATCHGROUP}
         fi
 
-        if deb-systemd-helper is-enabled ssh.service; then
-            omv-mkconf sftp
-            deb-systemd-invoke restart omv-sftp.service >/dev/null || true
-        fi
+        omv-salt deploy run sftp
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)
