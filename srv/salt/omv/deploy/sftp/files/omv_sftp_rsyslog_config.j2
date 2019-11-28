@@ -1,7 +1,11 @@
-{% set logFile = salt['pillar.get']('default:OMV_SFTP_LOGFILE', '/var/log/openmediavault-sftp.log') -%}
+{%- set logFile = salt['pillar.get']('default:OMV_SFTP_LOGFILE', '/var/log/openmediavault-sftp.log') %}
+{%- set existingNames = [] -%}
 module(load="imuxsock")
-{% for share in config.shares.share %}
+{%- for share in config %}
+{%- if share.username not in existingNames %}
 input(type="imuxsock" Socket="/sftp/{{ share.username }}/dev/log" CreatePath="on")
-{% endfor %}
+{%- set _ = existingNames.append(share.username) %}
+{%- endif %}
+{%- endfor %}
 if $programname == 'internal-sftp' then {{ logFile }}
 & stop

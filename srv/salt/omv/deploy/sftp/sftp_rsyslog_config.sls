@@ -24,7 +24,7 @@ configure_omv_sftp_rsyslog_config:
       - salt://{{ slspath }}/files/omv_sftp_rsyslog_config.j2
     - template: jinja
     - context:
-        config: {{ config | json }}
+        config: {{ config.shares.share | json }}
     - user: root
     - group: root
     - mode: 644
