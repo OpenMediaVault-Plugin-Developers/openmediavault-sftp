@@ -5,12 +5,12 @@
 {% set sfpath2 = sfpath | replace(' ', '\\040') %}
 {% set sf_config = salt['omv_conf.get']('conf.system.sharedfolder', share.sharedfolderref) %}
 {% set sftppath = '/sftp/' + share.username + '/' + sf_config.name | escape_blank %}
-{% set option = "" %}
-{% for privilege in sf_config.privileges.privilege | json | selectattr('name', 'equalto', share.username) %}
+{% set option = '' %}
+{% for privilege in sf_config.privileges.privilege | selectattr('name', 'equalto', share.username) %}
 {% if privilege.perms == 5 %}
-{% set option = "bind,ro,nofail" %}
+{% set option = 'bind,ro,nofail' %}
 {% elif privilege.perms == 7 %}
-{% set option = "bind,rw,nofail" %}
+{% set option = 'bind,rw,nofail' %}
 {% endif %}
 {% endfor %}
 
