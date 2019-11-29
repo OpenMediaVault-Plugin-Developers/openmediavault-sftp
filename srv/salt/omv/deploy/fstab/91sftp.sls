@@ -1,20 +1,20 @@
 {% set config = salt['omv_conf.get']('conf.service.sftp') %}
 
 {% for share in config.shares.share %}
-{%- set sfpath = salt['omv_conf.get_sharedfolder_path'](share.sharedfolderref) %}
-{%- set sfpath2 = sfpath | replace(' ', '\\040') %}
-{%- set sf_config = salt['omv_conf.get']('conf.system.sharedfolder', share.sharedfolderref) %}
-{%- set sftppath = '/sftp/' + share.username + '/' + sf_config.name | replace(' ', '\\040') %}
-{%- set option = "" -%}
-{%- for privilege in sf_config.privileges.privilege | selectattr('name', 'equalto', share.username) -%}
-{%- if privilege.perms == 5 -%}
-{%- set option = "bind,ro,nofail" -%}
-{%- elif privilege.perms == 7 -%}
-{%- set option = "bind,rw,nofail" -%}
-{%- endif %}
-{%- endfor -%}
+{% set sfpath = salt['omv_conf.get_sharedfolder_path'](share.sharedfolderref) %}
+{% set sfpath2 = sfpath | replace(' ', '\\040') %}
+{% set sf_config = salt['omv_conf.get']('conf.system.sharedfolder', share.sharedfolderref) %}
+{% set sftppath = '/sftp/' + share.username + '/' + sf_config.name | escape_blank %}
+{% set option = "" %}
+{% for privilege in sf_config.privileges.privilege | json | selectattr('name', 'equalto', share.username) %}
+{% if privilege.perms == 5 %}
+{% set option = "bind,ro,nofail" %}
+{% elif privilege.perms == 7 %}
+{% set option = "bind,rw,nofail" %}
+{% endif %}
+{% endfor %}
 
-{%- if option != "" -%}
+{% if option != "" %}
 create_sftp_mountpoint_{{ share.uuid }}:
   file.accumulated:
     - filename: "/etc/fstab"
@@ -31,7 +31,7 @@ mount_sftp_mountpoint_{{ share.uuid }}:
     - mkmnt: True
     - persist: False
     - mount: True
-{%- else %}
+{% else %}
 unmount_sftp_mountpoint_{{ share.uuid }}:
   mount.unmounted:
     - name: {{ sftppath }}
@@ -41,5 +41,5 @@ unmount_sftp_mountpoint_{{ share.uuid }}:
 remove_openmediavault_dir_{{ share.uuid }}:
   file.absent:
     - name: {{ sftppath }}
-{%- endif %}
+{% endif %}
 {% endfor %}
