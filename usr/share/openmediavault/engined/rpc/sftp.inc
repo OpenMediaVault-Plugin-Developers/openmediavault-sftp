@@ -157,7 +157,7 @@ class OMVRpcServiceSftp extends \OMV\Rpc\ServiceAbstract
         $db->delete($object);
         // Apply changes immmediately
         \OMV\Rpc\Rpc::call('Config', 'applyChanges', [
-            'modules' => [ 'sftp' ],
+            'modules' => [ 'sftp', 'fstab' ],
             'force' => TRUE
         ], $context);
         // Return the deleted configuration object.
