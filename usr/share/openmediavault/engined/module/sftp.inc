@@ -26,6 +26,10 @@ class OMVModuleSftp extends \OMV\Engine\Module\ServiceAbstract
         return 'sftp';
     }
 
+    public function deployAfter(): array {
+        return ["fstab"];
+    }
+
     public function getStatus()
     {
         $db = \OMV\Config\Database::getInstance();
@@ -37,6 +41,12 @@ class OMVModuleSftp extends \OMV\Engine\Module\ServiceAbstract
             "enabled" => $object->get("enable"),
             "running" => $systemCtl->isActive()
         );
+    }
+
+    final public function onShareAction($type, $path, $object)
+    {
+        $this->setDirty();
+        $this->setDirtyByName('fstab');
     }
 
     final public function onSharedFolder($type, $path, $object)
@@ -57,7 +67,7 @@ class OMVModuleSftp extends \OMV\Engine\Module\ServiceAbstract
         $dispatcher->addListener(
             OMV_NOTIFY_CREATE | OMV_NOTIFY_MODIFY | OMV_NOTIFY_DELETE,
             'org.openmediavault.conf.service.sftp.share',
-            [ $this, 'setDirty' ]);
+            [ $this, 'onShareAction' ]);
         $dispatcher->addListener(
             OMV_NOTIFY_CREATE | OMV_NOTIFY_DELETE,
             'org.openmediavault.conf.system.filesystem.mountpoint',

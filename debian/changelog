@@ -1,3 +1,9 @@
+openmediavault-sftp (5.0.1) stable; urgency=low
+
+  * Mark fstab module dirty
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Sat, 21 Dec 2019 10:15:24 -0600
+
 openmediavault-sftp (5.0) stable; urgency=low
 
   * Update for OMV 5.x
