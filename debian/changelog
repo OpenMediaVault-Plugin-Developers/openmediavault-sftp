@@ -1,3 +1,9 @@
+openmediavault-sftp (5.0.2) stable; urgency=low
+
+  * Make user directories with proper permissions
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Sat, 21 Dec 2019 13:39:08 -0600
+
 openmediavault-sftp (5.0.1) stable; urgency=low
 
   * Mark fstab module dirty
