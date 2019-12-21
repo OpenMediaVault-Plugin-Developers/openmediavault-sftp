@@ -3,88 +3,94 @@
 # This file is distributed under the same license as the openmediavault-sftp package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
+# Translators:
+# songming <by@songming.me>, 2018
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-sftp\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-26 21:29-0600\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2017-11-27 03:31+0000\n"
+"Last-Translator: songming <by@songming.me>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/openmediavault-plugin-developers/teams/1854/zh_CN/)\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 msgid "Access List"
-msgstr ""
+msgstr "访问列表"
 
 msgid "Add share"
-msgstr ""
+msgstr "添加共享"
 
 msgid "Allow access to sftp-access group only"
-msgstr ""
+msgstr "只允许 sftp-access 组用户访问"
 
 msgid "AllowGroups"
-msgstr ""
+msgstr "授权组"
 
 msgid "Date & Time"
-msgstr ""
+msgstr "日期 & 时间"
 
 msgid "Edit share"
-msgstr ""
+msgstr "编辑共享"
 
 msgid "Enable"
-msgstr ""
+msgstr "启用"
 
 msgid "Enable keyboard-interactive authentication"
-msgstr ""
+msgstr "启用键盘字符密码"
 
 msgid "Enable public key authentication"
-msgstr ""
+msgstr "启用公钥密码"
 
 msgid "Extra options"
-msgstr ""
+msgstr "扩展选项"
 
 msgid "Hostname"
-msgstr ""
+msgstr "主机名"
 
 msgid "Message"
-msgstr ""
+msgstr "消息"
 
 msgid "Password authentication"
-msgstr ""
+msgstr "密码认证"
 
 msgid ""
 "Please check the <a href='http://www.openbsd.org/cgi-"
 "bin/man.cgi?query=sshd_config&sektion=5' target='_blank'>manual page</a> for"
 " more details."
 msgstr ""
+"请查看<a href='http://www.openbsd.org/cgi-"
+"bin/man.cgi?query=sshd_config&sektion=5' target='_blank'>手册</a>了解更多详情。"
 
 msgid "Port"
-msgstr ""
+msgstr "端口"
 
 msgid "Port number. Choose a different one from the default ssh server"
-msgstr ""
+msgstr "端口号，选择其它 ssh 服务没有占用的端口号。"
 
 msgid "Public key authentication"
-msgstr ""
+msgstr "公钥认证"
 
 msgid "SFTP"
-msgstr ""
+msgstr "SFTP"
 
 msgid "Settings"
-msgstr ""
+msgstr "设置"
 
 msgid "Shared Folder"
-msgstr ""
+msgstr "共享文件夹"
 
 msgid "Shared folder to give user access to when connecting via sftp."
-msgstr ""
+msgstr "用户可通过 sftp 联机访问共享文件夹。"
 
 msgid "Username"
-msgstr ""
+msgstr "用户名"
 
 msgid "n/a"
-msgstr ""
+msgstr "n/a"

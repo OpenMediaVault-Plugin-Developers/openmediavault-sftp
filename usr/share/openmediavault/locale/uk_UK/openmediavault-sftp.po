@@ -3,19 +3,23 @@
 # This file is distributed under the same license as the openmediavault-sftp package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
+# Translators:
+# zubr139, 2019
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-sftp\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-26 21:29-0600\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2017-11-27 03:31+0000\n"
+"Last-Translator: zubr139, 2019\n"
 "Language-Team: Ukrainian (https://www.transifex.com/openmediavault-plugin-developers/teams/1854/uk/)\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: uk\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 msgid "Access List"
 msgstr ""
@@ -36,7 +40,7 @@ msgid "Edit share"
 msgstr ""
 
 msgid "Enable"
-msgstr ""
+msgstr "Увімкнути"
 
 msgid "Enable keyboard-interactive authentication"
 msgstr ""
@@ -51,7 +55,7 @@ msgid "Hostname"
 msgstr ""
 
 msgid "Message"
-msgstr ""
+msgstr "Повідомлення"
 
 msgid "Password authentication"
 msgstr ""
@@ -63,7 +67,7 @@ msgid ""
 msgstr ""
 
 msgid "Port"
-msgstr ""
+msgstr "Порт"
 
 msgid "Port number. Choose a different one from the default ssh server"
 msgstr ""
@@ -72,10 +76,10 @@ msgid "Public key authentication"
 msgstr ""
 
 msgid "SFTP"
-msgstr ""
+msgstr "SFTP"
 
 msgid "Settings"
-msgstr ""
+msgstr "Налаштування"
 
 msgid "Shared Folder"
 msgstr ""

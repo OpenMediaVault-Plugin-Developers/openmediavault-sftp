@@ -3,88 +3,97 @@
 # This file is distributed under the same license as the openmediavault-sftp package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
+# Translators:
+# Raul Fernandez Garcia <raulfg3@gmail.com>, 2018
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-sftp\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-26 21:29-0600\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Language-Team: Spanish (Spain) (https://www.transifex.com/openmediavault-plugin-developers/teams/1854/es_ES/)\n"
+"PO-Revision-Date: 2017-11-27 03:31+0000\n"
+"Last-Translator: Raul Fernandez Garcia <raulfg3@gmail.com>, 2018\n"
+"Language-Team: Spanish (https://www.transifex.com/openmediavault-plugin-developers/teams/1854/es/)\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: es_ES\n"
+"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "Access List"
-msgstr ""
+msgstr "Lista de acceso"
 
 msgid "Add share"
-msgstr ""
+msgstr "Añadir compartido"
 
 msgid "Allow access to sftp-access group only"
-msgstr ""
+msgstr "Permitir acceso sftp al grupo sftp-access"
 
 msgid "AllowGroups"
-msgstr ""
+msgstr "Permitir Grupos"
 
 msgid "Date & Time"
-msgstr ""
+msgstr "Fecha & Hora"
 
 msgid "Edit share"
-msgstr ""
+msgstr "Editar compartido"
 
 msgid "Enable"
-msgstr ""
+msgstr "Habilitar"
 
 msgid "Enable keyboard-interactive authentication"
-msgstr ""
+msgstr "Habilitar autentificación interactiva por teclado"
 
 msgid "Enable public key authentication"
-msgstr ""
+msgstr "Habilitar autentificación por clave pública"
 
 msgid "Extra options"
-msgstr ""
+msgstr "Opciones extra"
 
 msgid "Hostname"
-msgstr ""
+msgstr "Nombre de Host"
 
 msgid "Message"
-msgstr ""
+msgstr "Mensaje"
 
 msgid "Password authentication"
-msgstr ""
+msgstr "Autentificación por contraseña"
 
 msgid ""
 "Please check the <a href='http://www.openbsd.org/cgi-"
 "bin/man.cgi?query=sshd_config&sektion=5' target='_blank'>manual page</a> for"
 " more details."
 msgstr ""
+"Por favor marque la pgn. <a href='http://www.openbsd.org/cgi-"
+"bin/man.cgi?query=sshd_config&sektion=5' target='_blank'> del manual </a> "
+"para mas detalles"
 
 msgid "Port"
-msgstr ""
+msgstr "Puerto"
 
 msgid "Port number. Choose a different one from the default ssh server"
-msgstr ""
+msgstr "Numero de puerto. Elija uno diferente del servidor SSH por defecto"
 
 msgid "Public key authentication"
-msgstr ""
+msgstr "Autentificación por clave pública."
 
 msgid "SFTP"
-msgstr ""
+msgstr "SFTP"
 
 msgid "Settings"
-msgstr ""
+msgstr "Opciones"
 
 msgid "Shared Folder"
-msgstr ""
+msgstr "Carpeta compartida"
 
 msgid "Shared folder to give user access to when connecting via sftp."
 msgstr ""
+"Carpeta compartida con permisos de acceso al usuario cuando se conecte via "
+"SFTP."
 
 msgid "Username"
-msgstr ""
+msgstr "Usuario"
 
 msgid "n/a"
-msgstr ""
+msgstr "n/a"
