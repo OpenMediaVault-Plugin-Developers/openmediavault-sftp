@@ -22,8 +22,8 @@
 configure_sftp_user_dir_{{ share.username }}:
   file.directory:
     - name: "/sftp/{{ share.username }}"
-    - user: {{ share.username }}
-    - group: users
+    - user: root
+    - group: root
     - mode: 755
     - makedirs: True
 {% set _ = existingNames.append(share.username) %}

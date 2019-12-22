@@ -1,3 +1,9 @@
+openmediavault-sftp (5.0.3) stable; urgency=low
+
+  * Fix permissions on user directories
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Sun, 22 Dec 2019 08:59:19 -0600
+
 openmediavault-sftp (5.0.2) stable; urgency=low
 
   * Make user directories with proper permissions
