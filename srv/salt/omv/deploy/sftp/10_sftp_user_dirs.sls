@@ -1,6 +1,6 @@
 # @license   http://www.gnu.org/licenses/gpl.html GPL Version 3
 # @author    OpenMediaVault Plugin Developers <plugins@omv-extras.org>
-# @copyright Copyright (c) 2019 OpenMediaVault Plugin Developers
+# @copyright Copyright (c) 2019-2020 OpenMediaVault Plugin Developers
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,6 +14,13 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+configure_sftp_root_dir:
+  file.directory:
+    - name: "/sftp"
+    - user: root
+    - group: root
+    - mode: 755
 
 {% set config = salt['omv_conf.get']('conf.service.sftp') %}
 {% set existingNames = [] %}
