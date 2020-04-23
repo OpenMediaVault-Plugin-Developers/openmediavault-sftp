@@ -26,16 +26,8 @@ set -e
 SERVICE_XPATH_NAME="sftp"
 SERVICE_XPATH="/config/services/${SERVICE_XPATH_NAME}"
 
-if ! omv_config_exists "${SERVICE_XPATH}"; then
-    omv_config_add_node "/config/services" "${SERVICE_XPATH_NAME}"
-    omv_config_add_key "${SERVICE_XPATH}" "enable" "0"
-    omv_config_add_key "${SERVICE_XPATH}" "port" "222"
-    omv_config_add_key "${SERVICE_XPATH}" "passwordauthentication" "1"
-    omv_config_add_key "${SERVICE_XPATH}" "pubkeyauthentication" "0"
-    omv_config_add_key "${SERVICE_XPATH}" "allowgroups" "0"
+if ! omv_config_exists "${SERVICE_XPATH}/rsyslog"; then
     omv_config_add_key "${SERVICE_XPATH}" "rsyslog" "1"
-    omv_config_add_key "${SERVICE_XPATH}" "extraoptions" ""
-    omv_config_add_node "${SERVICE_XPATH}" "shares"
 fi
 
 exit 0

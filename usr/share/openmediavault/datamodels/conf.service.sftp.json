@@ -29,6 +29,10 @@
 			"type": "boolean",
 			"default": false
 		},
+		"rsyslog": {
+			"type": "boolean",
+			"default": true
+		},
 		"extraoptions": {
 			"type": "string",
 			"default": ""

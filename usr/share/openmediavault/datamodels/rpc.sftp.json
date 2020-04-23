@@ -26,6 +26,10 @@
 				"type": "boolean",
 				"required": false
 			},
+			"rsyslog": {
+				"type": "boolean",
+				"required": false
+			},
 			"extraoptions": {
 				"type": "string",
 				"required": true

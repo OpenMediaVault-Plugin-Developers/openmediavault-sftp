@@ -16,10 +16,13 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 {% set config = salt['omv_conf.get']('conf.service.sftp') %}
+{% set rsyslogConf = salt['pillar.get']('default:OMV_SFTP_RSYSLOGCONF', '/etc/rsyslog.d/openmediavault-sftp.conf') -%}
+
+{% if config.rsyslog | to_bool %}
 
 configure_omv_sftp_rsyslog_config:
   file.managed:
-    - name: "/etc/rsyslog.d/openmediavault-sftp.conf"
+    - name: {{ rsyslogConf }}
     - source:
       - salt://{{ tpldir }}/files/omv_sftp_rsyslog_config.j2
     - template: jinja
@@ -28,3 +31,11 @@ configure_omv_sftp_rsyslog_config:
     - user: root
     - group: root
     - mode: 644
+
+{% else %}
+
+remove_omv_sftp_rsyslog_config:
+  file.absent:
+    - name: {{ rsyslogConf }}
+
+{% endif %}

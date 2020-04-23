@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-sftp\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-26 21:29-0600\n"
+"POT-Creation-Date: 2020-04-23 07:11-0500\n"
 "PO-Revision-Date: 2017-11-27 03:31+0000\n"
 "Last-Translator: Raul Fernandez Garcia <raulfg3@gmail.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/openmediavault-plugin-developers/teams/1854/es/)\n"
@@ -48,6 +48,9 @@ msgstr "Habilitar autentificación interactiva por teclado"
 msgid "Enable public key authentication"
 msgstr "Habilitar autentificación por clave pública"
 
+msgid "Enable rsyslog logging"
+msgstr ""
+
 msgid "Extra options"
 msgstr "Opciones extra"
 
@@ -77,6 +80,9 @@ msgstr "Numero de puerto. Elija uno diferente del servidor SSH por defecto"
 
 msgid "Public key authentication"
 msgstr "Autentificación por clave pública."
+
+msgid "Rsyslog"
+msgstr ""
 
 msgid "SFTP"
 msgstr "SFTP"

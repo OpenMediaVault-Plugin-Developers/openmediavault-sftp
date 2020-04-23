@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-sftp\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-26 21:29-0600\n"
+"POT-Creation-Date: 2020-04-23 07:11-0500\n"
 "PO-Revision-Date: 2017-11-27 03:31+0000\n"
 "Language-Team: Hungarian (https://www.transifex.com/openmediavault-plugin-developers/teams/1854/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -44,6 +44,9 @@ msgstr ""
 msgid "Enable public key authentication"
 msgstr ""
 
+msgid "Enable rsyslog logging"
+msgstr ""
+
 msgid "Extra options"
 msgstr ""
 
@@ -69,6 +72,9 @@ msgid "Port number. Choose a different one from the default ssh server"
 msgstr ""
 
 msgid "Public key authentication"
+msgstr ""
+
+msgid "Rsyslog"
 msgstr ""
 
 msgid "SFTP"

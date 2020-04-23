@@ -20,7 +20,6 @@
 {% set sftpSubsystem = salt['pillar.get']('default:OMV_SFTP_SUBSYSTEM_SFTP', 'internal-sftp -l INFO') -%}
 {% set usePam = salt['pillar.get']('default:OMV_SFTP_USEPAM', 'yes') -%}
 {% set addressFamily = salt['pillar.get']('default:OMV_SFTP_ADDRESSFAMILY', 'any') -%}
-{% set rsyslogConf = salt['pillar.get']('default:OMV_SFTP_RSYSLOGCONF', '/etc/rsyslog.d/openmediavault-sftp.conf') -%}
 {% set logFile = salt['pillar.get']('default:OMV_SFTP_LOGFILE', '/var/log/openmediavault-sftp.log') -%}
 {% set matchGroup = salt['pillar.get']('default:OMV_SFTP_MATCHGROUP', 'sftp-access') -%}
 {% set chrootDir = salt['pillar.get']('default:OMV_SFTP_CHROOTDIR', '/sftp/%u') -%}

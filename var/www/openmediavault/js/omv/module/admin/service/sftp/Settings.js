@@ -71,6 +71,12 @@ Ext.define("OMV.module.admin.service.sftp.Settings", {
             checked: false,
             boxLabel: _("Allow access to sftp-access group only")
         },{
+            xtype: "checkbox",
+            name: "rsyslog",
+            fieldLabel: _("Rsyslog"),
+            checked: false,
+            boxLabel: _("Enable rsyslog logging")
+        },{
             xtype: "textarea",
             name: "extraoptions",
             fieldLabel: _("Extra options"),

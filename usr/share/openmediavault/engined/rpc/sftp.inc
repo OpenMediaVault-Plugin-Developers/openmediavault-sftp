@@ -36,9 +36,7 @@ class OMVRpcServiceSftp extends \OMV\Rpc\ServiceAbstract
 
     public function getSettings($params, $context) {
         // Validate the RPC caller context.
-        $this->validateMethodContext($context, [
-            'role' => OMV_ROLE_ADMINISTRATOR
-        ]);
+        $this->validateMethodContext($context, ['role' => OMV_ROLE_ADMINISTRATOR]);
         // Get the configuration object.
         $db = \OMV\Config\Database::getInstance();
         $object = $db->get('conf.service.sftp');
@@ -47,9 +45,7 @@ class OMVRpcServiceSftp extends \OMV\Rpc\ServiceAbstract
 
     public function setSettings($params, $context) {
         // Validate the RPC caller context.
-        $this->validateMethodContext($context, [
-            'role' => OMV_ROLE_ADMINISTRATOR
-        ]);
+        $this->validateMethodContext($context, ['role' => OMV_ROLE_ADMINISTRATOR]);
         // Validate the parameters of the RPC service method.
         $this->validateMethodParams($params, 'rpc.sftp.setsettings');
         // Get the existing configuration object.
