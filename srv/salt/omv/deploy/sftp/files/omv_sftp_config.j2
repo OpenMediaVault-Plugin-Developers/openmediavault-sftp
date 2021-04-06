@@ -3,7 +3,6 @@
 {% set logLevel = salt['pillar.get']('default:OMV_SFTP_LOGLEVEL', 'INFO') -%}
 {% set loginGraceTime = salt['pillar.get']('default:OMV_SFTP_LOGINGRACETIME', '120') -%}
 {% set strictModes = salt['pillar.get']('default:OMV_SFTP_STRICTMODES', 'yes') -%}
-{% set pubkeyAuth = salt['pillar.get']('default:OMV_SFTP_PUBKEYAUTHENTICATION', 'yes') -%}
 {% set ignoreRhosts = salt['pillar.get']('default:OMV_SFTP_IGNORERHOSTS', 'yes') -%}
 {% set hostbasedAuth = salt['pillar.get']('default:OMV_SFTP_HOSTBASEDAUTHENTICATION', 'no') -%}
 {% set permitEmptyPasswords = salt['pillar.get']('default:OMV_SFTP_PERMITEMPTYPASSWORDS', 'no') -%}
@@ -35,7 +34,6 @@ SyslogFacility {{ syslogFacility }}
 LogLevel {{ logLevel }}
 LoginGraceTime {{ loginGraceTime }}
 StrictModes {{ strictModes }}
-PubkeyAuthentication {{ pubkeyAuth }}
 IgnoreRhosts {{ ignoreRhosts }}
 HostbasedAuthentication {{ hostbasedAuth }}
 PermitEmptyPasswords {{ permitEmptyPasswords }}
