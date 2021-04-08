@@ -1,3 +1,9 @@
+openmediavault-sftp (5.0.7) stable; urgency=low
+
+  * Fix pub key auth setting
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Wed, 07 Apr 2021 19:11:00 -0500
+
 openmediavault-sftp (5.0.6) stable; urgency=low
 
   * Add option to disable rsyslog
