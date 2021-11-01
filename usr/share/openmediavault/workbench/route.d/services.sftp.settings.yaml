@@ -1,0 +1,7 @@
+version: "1.0"
+type: route
+data:
+  url: "/services/sftp/settings"
+  title: _("Settings")
+  editing: true
+  component: omv-services-sftp-settings-form-page

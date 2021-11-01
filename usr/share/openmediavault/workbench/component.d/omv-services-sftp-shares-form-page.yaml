@@ -1,0 +1,45 @@
+version: "1.0"
+type: component
+data:
+  name: omv-services-sftp-shares-form-page
+  type: formPage
+  config:
+    request:
+      service: Sftp
+      get:
+        method: getShare
+        params:
+          uuid: "{{ _routeParams.uuid }}"
+      post:
+        method: setShare
+    fields:
+      - type: confObjUuid
+      - type: select
+        name: username
+        label: _("Username")
+        placeholder: _("Select a username ...")
+        value: ""
+        valueField: name
+        textField: name
+        store:
+          proxy:
+            service: UserMgmt
+            get:
+              method: enumerateUsers
+          sorters:
+            - dir: asc
+              prop: name
+      - type: sharedFolderSelect
+        name: sharedfolderref
+        label: _("Shared folder")
+        hint: _("Shared folder to give user access to when connecting via sftp.")
+    buttons:
+      - template: submit
+        execute:
+          type: url
+          url: "/services/sftp/shares"
+      - template: cancel
+        execute:
+          type: url
+          url: "/services/sftp/shares"
+

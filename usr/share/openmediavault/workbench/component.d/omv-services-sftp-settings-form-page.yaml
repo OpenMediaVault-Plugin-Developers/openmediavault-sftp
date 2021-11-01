@@ -1,0 +1,59 @@
+version: "1.0"
+type: component
+data:
+  name: omv-services-sftp-settings-form-page
+  type: formPage
+  config:
+    request:
+      service: Sftp
+      get:
+        method: getSettings
+      post:
+        method: setSettings
+    fields:
+      - type: checkbox
+        name: enable
+        label: _("Enable")
+        value: false
+      - type: numberInput
+        name: port
+        label: _("Port")
+        value: 222
+        hint: _("Port number. Choose a different one from the default ssh server")
+        validators:
+          min: 1
+          max: 65535
+          patternType: port
+          required: true 
+      - type: checkbox
+        name: passwordauthentication
+        label: _("Password authentication")
+        value: true
+        hint: _("Enable keyboard-interactive authentication.")
+      - type: checkbox
+        name: pubkeyauthentication
+        label: _("Public key authentication")
+        value: true
+        hint: _("Enable public key authentication.")
+      - type: checkbox
+        name: allowgroups
+        label: _("AllowGroups")
+        value: false
+        hint: _("Allow access to sftp-access group only")
+      - type: checkbox
+        name: rsyslog
+        label: _("Rsyslog")
+        value: false
+        hint: _("Enable rsyslog logging")
+      - type: textarea
+        name: extraoptions
+        label: _("Extra options")
+        value: ""
+        rows: 3
+        hint: _("Please check the <a href='http://www.openbsd.org/cgi-bin/man.cgi?query=sshd_config&sektion=5' target='_blank'>manual page</a> for more details.")
+    buttons:
+      - template: submit
+      - template: cancel
+        execute:
+          type: url
+          url: "/services/sftp"
