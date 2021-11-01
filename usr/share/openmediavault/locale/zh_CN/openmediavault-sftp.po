@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-sftp\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-23 07:11-0500\n"
+"POT-Creation-Date: 2021-11-01 18:00-0500\n"
 "PO-Revision-Date: 2017-11-27 03:31+0000\n"
 "Last-Translator: songming <by@songming.me>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/openmediavault-plugin-developers/teams/1854/zh_CN/)\n"
@@ -21,32 +21,35 @@ msgstr ""
 "Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-msgid "Access List"
-msgstr "访问列表"
-
-msgid "Add share"
-msgstr "添加共享"
-
 msgid "Allow access to sftp-access group only"
 msgstr "只允许 sftp-access 组用户访问"
 
 msgid "AllowGroups"
 msgstr "授权组"
 
+msgid "Create"
+msgstr ""
+
+msgid "Created share."
+msgstr ""
+
 msgid "Date & Time"
 msgstr "日期 & 时间"
 
-msgid "Edit share"
-msgstr "编辑共享"
+msgid "Edit"
+msgstr ""
+
+msgid "Edit share."
+msgstr ""
 
 msgid "Enable"
 msgstr "启用"
 
-msgid "Enable keyboard-interactive authentication"
-msgstr "启用键盘字符密码"
+msgid "Enable keyboard-interactive authentication."
+msgstr ""
 
-msgid "Enable public key authentication"
-msgstr "启用公钥密码"
+msgid "Enable public key authentication."
+msgstr ""
 
 msgid "Enable rsyslog logging"
 msgstr ""
@@ -86,17 +89,26 @@ msgstr ""
 msgid "SFTP"
 msgstr "SFTP"
 
+msgid "Select a username ..."
+msgstr ""
+
 msgid "Settings"
 msgstr "设置"
 
-msgid "Shared Folder"
-msgstr "共享文件夹"
+msgid "Shared folder"
+msgstr ""
 
 msgid "Shared folder to give user access to when connecting via sftp."
 msgstr "用户可通过 sftp 联机访问共享文件夹。"
+
+msgid "Shares"
+msgstr ""
 
 msgid "Username"
 msgstr "用户名"
 
 msgid "n/a"
 msgstr "n/a"
+
+msgid "sftp"
+msgstr ""

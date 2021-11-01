@@ -4,16 +4,17 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# clexanis, 2017
+# Axel Cantenys, 2017
+# kevin LECLERCQ <nuklearstriker@gmail.com>, 2020
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-sftp\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-23 07:11-0500\n"
+"POT-Creation-Date: 2021-11-01 18:00-0500\n"
 "PO-Revision-Date: 2017-11-27 03:31+0000\n"
-"Last-Translator: clexanis, 2017\n"
+"Last-Translator: kevin LECLERCQ <nuklearstriker@gmail.com>, 2020\n"
 "Language-Team: French (https://www.transifex.com/openmediavault-plugin-developers/teams/1854/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,35 +22,38 @@ msgstr ""
 "Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-msgid "Access List"
-msgstr "Liste d'accès"
-
-msgid "Add share"
-msgstr "Ajouter un partage"
-
 msgid "Allow access to sftp-access group only"
 msgstr "Autoriser l'accès au groupe « sftp-access » uniquement"
 
 msgid "AllowGroups"
 msgstr "Autoriser les groupes"
 
+msgid "Create"
+msgstr ""
+
+msgid "Created share."
+msgstr ""
+
 msgid "Date & Time"
 msgstr "Date et heure"
 
-msgid "Edit share"
-msgstr "Modifier le partage"
+msgid "Edit"
+msgstr ""
+
+msgid "Edit share."
+msgstr ""
 
 msgid "Enable"
 msgstr "Activer"
 
-msgid "Enable keyboard-interactive authentication"
-msgstr "Activer l'authentification interactive"
+msgid "Enable keyboard-interactive authentication."
+msgstr ""
 
-msgid "Enable public key authentication"
-msgstr "Activer l'authentification par clé publique"
+msgid "Enable public key authentication."
+msgstr ""
 
 msgid "Enable rsyslog logging"
-msgstr ""
+msgstr "Activer l'enregistrement Rsyslog"
 
 msgid "Extra options"
 msgstr "Options supplémentaires"
@@ -82,24 +86,33 @@ msgid "Public key authentication"
 msgstr "Authentification par clé publique"
 
 msgid "Rsyslog"
-msgstr ""
+msgstr "Rsyslog"
 
 msgid "SFTP"
 msgstr "SFTP"
 
+msgid "Select a username ..."
+msgstr ""
+
 msgid "Settings"
 msgstr "Paramètres"
 
-msgid "Shared Folder"
-msgstr "Dossier partagé"
+msgid "Shared folder"
+msgstr ""
 
 msgid "Shared folder to give user access to when connecting via sftp."
 msgstr ""
 "Dossier partagé pour donner accès à l'utilisateur lors de la connexion via "
 "sftp."
 
+msgid "Shares"
+msgstr ""
+
 msgid "Username"
 msgstr "Nom d'utilisateur"
 
 msgid "n/a"
 msgstr "N/A"
+
+msgid "sftp"
+msgstr ""

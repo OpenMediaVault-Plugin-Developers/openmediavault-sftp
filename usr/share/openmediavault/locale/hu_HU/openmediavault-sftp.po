@@ -4,16 +4,16 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Gyuris Gellért <bubu@ujevangelizacio.hu>, 2017
+# Gyuris Gellért <jobel@ujevangelizacio.hu>, 2017
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-sftp\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-23 07:11-0500\n"
+"POT-Creation-Date: 2021-11-01 18:00-0500\n"
 "PO-Revision-Date: 2017-11-27 03:31+0000\n"
-"Last-Translator: Gyuris Gellért <bubu@ujevangelizacio.hu>, 2017\n"
+"Last-Translator: Gyuris Gellért <jobel@ujevangelizacio.hu>, 2017\n"
 "Language-Team: Hungarian (Hungary) (https://www.transifex.com/openmediavault-plugin-developers/teams/1854/hu_HU/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,32 +21,35 @@ msgstr ""
 "Language: hu_HU\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-msgid "Access List"
-msgstr "Hozzáférési lista"
-
-msgid "Add share"
-msgstr "Megosztás hozzáadása"
-
 msgid "Allow access to sftp-access group only"
 msgstr "Hozzáférés engedélyezése csak az sftp-access csoport számára"
 
 msgid "AllowGroups"
 msgstr "Csoportengedélyek"
 
+msgid "Create"
+msgstr ""
+
+msgid "Created share."
+msgstr ""
+
 msgid "Date & Time"
 msgstr "Dátum és idő"
 
-msgid "Edit share"
-msgstr "Megosztás szerkesztése"
+msgid "Edit"
+msgstr ""
+
+msgid "Edit share."
+msgstr ""
 
 msgid "Enable"
 msgstr "Engedélyezés"
 
-msgid "Enable keyboard-interactive authentication"
-msgstr "Billentyűzet-interaktív hitelesítés engedélyezése"
+msgid "Enable keyboard-interactive authentication."
+msgstr ""
 
-msgid "Enable public key authentication"
-msgstr "Nyilvános kulcs alapú hitelesítés engedélyezése"
+msgid "Enable public key authentication."
+msgstr ""
 
 msgid "Enable rsyslog logging"
 msgstr ""
@@ -89,19 +92,28 @@ msgstr ""
 msgid "SFTP"
 msgstr "SFTP"
 
+msgid "Select a username ..."
+msgstr ""
+
 msgid "Settings"
 msgstr "Beállítások"
 
-msgid "Shared Folder"
-msgstr "Megosztott mappa"
+msgid "Shared folder"
+msgstr ""
 
 msgid "Shared folder to give user access to when connecting via sftp."
 msgstr ""
 "Megosztott mappa, melyhez a felhasználónak hozzáférést kell adni, amikor "
 "SFTP-vel kapcsolódik."
 
+msgid "Shares"
+msgstr ""
+
 msgid "Username"
 msgstr "Felhasználói név"
 
 msgid "n/a"
 msgstr "nem alkalmazható"
+
+msgid "sftp"
+msgstr ""

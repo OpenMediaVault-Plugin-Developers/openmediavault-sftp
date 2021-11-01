@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-sftp\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-23 07:11-0500\n"
+"POT-Creation-Date: 2021-11-01 18:00-0500\n"
 "PO-Revision-Date: 2017-11-27 03:31+0000\n"
 "Language-Team: Catalan (Spain) (https://www.transifex.com/openmediavault-plugin-developers/teams/1854/ca_ES/)\n"
 "MIME-Version: 1.0\n"
@@ -17,31 +17,34 @@ msgstr ""
 "Language: ca_ES\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-msgid "Access List"
-msgstr ""
-
-msgid "Add share"
-msgstr ""
-
 msgid "Allow access to sftp-access group only"
 msgstr ""
 
 msgid "AllowGroups"
 msgstr ""
 
+msgid "Create"
+msgstr ""
+
+msgid "Created share."
+msgstr ""
+
 msgid "Date & Time"
 msgstr ""
 
-msgid "Edit share"
+msgid "Edit"
+msgstr ""
+
+msgid "Edit share."
 msgstr ""
 
 msgid "Enable"
 msgstr ""
 
-msgid "Enable keyboard-interactive authentication"
+msgid "Enable keyboard-interactive authentication."
 msgstr ""
 
-msgid "Enable public key authentication"
+msgid "Enable public key authentication."
 msgstr ""
 
 msgid "Enable rsyslog logging"
@@ -80,17 +83,26 @@ msgstr ""
 msgid "SFTP"
 msgstr ""
 
+msgid "Select a username ..."
+msgstr ""
+
 msgid "Settings"
 msgstr ""
 
-msgid "Shared Folder"
+msgid "Shared folder"
 msgstr ""
 
 msgid "Shared folder to give user access to when connecting via sftp."
+msgstr ""
+
+msgid "Shares"
 msgstr ""
 
 msgid "Username"
 msgstr ""
 
 msgid "n/a"
+msgstr ""
+
+msgid "sftp"
 msgstr ""
