@@ -45,7 +45,7 @@ AcceptEnv {{ acceptEnv }}
 Subsystem sftp {{ subsystemSftp }}
 UsePAM {{ usePAM }}
 Port {{ config.port }}
-PermitRootLogin {{ 'yes' if rootLogin else 'no' }}
+PermitRootLogin {{ 'no' if rootLogin else 'yes' }}
 Compression {{ 'yes' if compression else 'no' }}
 PasswordAuthentication {{ 'yes' if config.passwordauthentication else 'no' }}
 PubkeyAuthentication {{ 'yes' if config.pubkeyauthentication else 'no' }}
