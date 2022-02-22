@@ -2,6 +2,6 @@ version: "1.0"
 type: navigation-item
 data:
   path: "services.sftp"
-  text: _("sftp")
+  text: _("Sftp")
   icon: "mdi:share-variant-outline"
   url: "/services/sftp"
