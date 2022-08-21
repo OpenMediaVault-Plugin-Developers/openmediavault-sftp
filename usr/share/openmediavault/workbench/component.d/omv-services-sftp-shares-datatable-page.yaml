@@ -17,6 +17,7 @@ data:
     columns:
       - name: _("Username")
         prop: username
+        flexGrow: 1
         sortable: true
       - name: _("Shared folder")
         prop: sharedfoldername
