@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-sftp\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-01 18:00-0500\n"
+"POT-Creation-Date: 2022-10-27 16:20-0500\n"
 "PO-Revision-Date: 2017-11-27 03:31+0000\n"
 "Language-Team: Javanese (https://www.transifex.com/openmediavault-plugin-developers/teams/1854/jv/)\n"
 "MIME-Version: 1.0\n"
@@ -87,6 +87,9 @@ msgid "Select a username ..."
 msgstr ""
 
 msgid "Settings"
+msgstr ""
+
+msgid "Sftp"
 msgstr ""
 
 msgid "Shared folder"

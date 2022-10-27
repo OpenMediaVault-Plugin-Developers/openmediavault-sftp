@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-sftp\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-01 18:00-0500\n"
+"POT-Creation-Date: 2022-10-27 16:20-0500\n"
 "PO-Revision-Date: 2017-11-27 03:31+0000\n"
 "Last-Translator: Cyryl Sochacki <cyrylsochacki@gmail.com>, 2021\n"
 "Language-Team: Polish (Poland) (https://www.transifex.com/openmediavault-plugin-developers/teams/1854/pl_PL/)\n"
@@ -95,6 +95,9 @@ msgstr ""
 
 msgid "Settings"
 msgstr "Ustawienia"
+
+msgid "Sftp"
+msgstr ""
 
 msgid "Shared folder"
 msgstr ""
