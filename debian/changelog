@@ -1,3 +1,9 @@
+openmediavault-sftp (7.0.2) stable; urgency=low
+
+  * Improve unmount and directory removal
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Sun, 07 Apr 2024 09:47:10 -0500
+
 openmediavault-sftp (7.0.1) stable; urgency=low
 
   * Use safer bind mount cleanup
