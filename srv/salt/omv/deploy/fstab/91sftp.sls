@@ -33,13 +33,11 @@ mount_sftp_mountpoint_{{ share.uuid }}:
     - mount: True
 {% else %}
 unmount_sftp_mountpoint_{{ share.uuid }}:
-  mount.unmounted:
-    - name: {{ sftppath }}
-    - device: {{ sfpath }}
-    - persist: True
+  cmd.run:
+    - name: "umount -l '{{ sftppath }}'"
 
 remove_openmediavault_dir_{{ share.uuid }}:
-  file.absent:
-    - name: {{ sftppath }}
+  cmd.run:
+    - name: "rmdir '{{ sftppath }}'"
 {% endif %}
 {% endfor %}
