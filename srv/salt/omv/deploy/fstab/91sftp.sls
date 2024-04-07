@@ -32,12 +32,18 @@ mount_sftp_mountpoint_{{ share.uuid }}:
     - persist: False
     - mount: True
 {% else %}
+
+{% if salt['file.directory_exists'](sftppath) %}
 unmount_sftp_mountpoint_{{ share.uuid }}:
   cmd.run:
-    - name: "umount -l '{{ sftppath }}'"
+    - name: "umount --lazy --quiet '{{ sftppath }}'"
+    - check_cmd:
+      - /usr/bin/true
 
 remove_openmediavault_dir_{{ share.uuid }}:
   cmd.run:
     - name: "rmdir '{{ sftppath }}'"
+{% endif %}
+
 {% endif %}
 {% endfor %}
