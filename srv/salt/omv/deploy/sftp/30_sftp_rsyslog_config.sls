@@ -32,10 +32,33 @@ configure_omv_sftp_rsyslog_config:
     - group: root
     - mode: 644
 
+restart_rsyslog_service_sftp1:
+  service.running:
+    - name: rsyslog
+    - enable: True
+    - watch:
+      - file: configure_omv_sftp_rsyslog_config
+
 {% else %}
 
 remove_omv_sftp_rsyslog_config:
   file.absent:
     - name: {{ rsyslogConf }}
 
+delete_dev_log_and_empty_dev_directory:
+  cmd.run:
+    - name: rm -f /sftp/*/dev/log || true
+
+delete_dev_directory:
+  cmd.run:
+    - name: rmdir /sftp/*/dev || true
+
+restart_rsyslog_service_sftp2:
+  service.running:
+    - name: rsyslog
+    - enable: True
+    - watch:
+      - file: remove_omv_sftp_rsyslog_config
+
 {% endif %}
+
