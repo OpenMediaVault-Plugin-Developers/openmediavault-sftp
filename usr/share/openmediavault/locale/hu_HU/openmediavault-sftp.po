@@ -4,7 +4,7 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Gyuris Gellért <jobel@ujevangelizacio.hu>, 2017
+# Gyuris Gellért <jobel@ujevangelizacio.hu>, 2024
 # 
 #, fuzzy
 msgid ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-27 16:20-0500\n"
 "PO-Revision-Date: 2017-11-27 03:31+0000\n"
-"Last-Translator: Gyuris Gellért <jobel@ujevangelizacio.hu>, 2017\n"
+"Last-Translator: Gyuris Gellért <jobel@ujevangelizacio.hu>, 2024\n"
 "Language-Team: Hungarian (Hungary) (https://app.transifex.com/openmediavault-plugin-developers/teams/1854/hu_HU/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,31 +28,31 @@ msgid "AllowGroups"
 msgstr "Csoportengedélyek"
 
 msgid "Create"
-msgstr ""
+msgstr "Létrehozás"
 
 msgid "Created share."
-msgstr ""
+msgstr "Megosztás létrejött."
 
 msgid "Date & Time"
 msgstr "Dátum és idő"
 
 msgid "Edit"
-msgstr ""
+msgstr "Szerkesztés"
 
 msgid "Edit share."
-msgstr ""
+msgstr "Megosztás szerkesztése."
 
 msgid "Enable"
 msgstr "Engedélyezés"
 
 msgid "Enable keyboard-interactive authentication."
-msgstr ""
+msgstr "Billentyűzet-interaktív hitelesítés engedélyezése."
 
 msgid "Enable public key authentication."
-msgstr ""
+msgstr "Nyilvános kulcs alapú hitelesítés engedélyezése."
 
 msgid "Enable rsyslog logging"
-msgstr ""
+msgstr "Rsyslog naplózás engedélyezése"
 
 msgid "Extra options"
 msgstr "További beállítások"
@@ -87,22 +87,22 @@ msgid "Public key authentication"
 msgstr "Nyilvános kulcs alapú hitelesítés"
 
 msgid "Rsyslog"
-msgstr ""
+msgstr "Rsyslog"
 
 msgid "SFTP"
 msgstr "SFTP"
 
 msgid "Select a username ..."
-msgstr ""
+msgstr "Felhasználónév kiválasztása…"
 
 msgid "Settings"
 msgstr "Beállítások"
 
 msgid "Sftp"
-msgstr ""
+msgstr "Sftp"
 
 msgid "Shared folder"
-msgstr ""
+msgstr "Megosztott mappa"
 
 msgid "Shared folder to give user access to when connecting via sftp."
 msgstr ""
@@ -110,13 +110,13 @@ msgstr ""
 "SFTP-vel kapcsolódik."
 
 msgid "Shares"
-msgstr ""
+msgstr "Megosztás"
 
 msgid "Username"
-msgstr "Felhasználói név"
+msgstr "Felhasználónév"
 
 msgid "n/a"
 msgstr "nem alkalmazható"
 
 msgid "sftp"
-msgstr ""
+msgstr "sftp"
