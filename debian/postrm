@@ -35,8 +35,11 @@ case "$1" in
         omv_config_delete "/config/services/sftp"
 
         # Remove config and log files
-        if [ -f "/etc/rsyslog.d/openmediavault-sftp.log" ]; then
-            rm "/etc/rsyslog.d/openmediavault-sftp.log"
+        if [ -f "/etc/rsyslog.d/openmediavault-sftp.conf" ]; then
+            rm "/etc/rsyslog.d/openmediavault-sftp.conf"
+        fi
+        if [ -f "/var/log/openmediavault-sftp.log" ]; then
+            rm "/var/log/openmediavault-sftp.log"
         fi
         if [ -f "/etc/ssh/omv_sftp_config" ]; then
             rm "/etc/ssh/omv_sftp_config"
