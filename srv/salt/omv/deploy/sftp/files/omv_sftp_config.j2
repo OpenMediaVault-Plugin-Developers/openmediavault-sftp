@@ -45,10 +45,10 @@ AcceptEnv {{ acceptEnv }}
 Subsystem sftp {{ subsystemSftp }}
 UsePAM {{ usePAM }}
 Port {{ config.port }}
-PermitRootLogin {{ 'yes' if rootLogin else 'no' }}
-Compression {{ 'yes' if compression else 'no' }}
-PasswordAuthentication {{ 'yes' if config.passwordauthentication else 'no' }}
-PubkeyAuthentication {{ 'yes' if config.pubkeyauthentication else 'no' }}
+PermitRootLogin {{ 'yes' if rootLogin | to_bool else 'no' }}
+Compression {{ 'yes' if compression | to_bool else 'no' }}
+PasswordAuthentication {{ 'yes' if config.passwordauthentication | to_bool else 'no' }}
+PubkeyAuthentication {{ 'yes' if config.pubkeyauthentication | to_bool else 'no' }}
 AuthorizedKeysFile {{ authorizedKeysFile }}
 {% if salt['omv_utils.is_ipv6_enabled']() %}
 AddressFamily any
