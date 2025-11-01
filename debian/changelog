@@ -1,3 +1,9 @@
+openmediavault-sftp (7.0.6) stable; urgency=low
+
+  * Fix boolean logic in config file creation
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Sat, 01 Nov 2025 13:46:47 -0500
+
 openmediavault-sftp (7.0.5) stable; urgency=low
 
   * Fix uninstall paths
