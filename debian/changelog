@@ -1,3 +1,9 @@
+openmediavault-sftp (8.0) stable; urgency=low
+
+  * Update for omv 8
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Sat, 15 Nov 2025 17:49:01 +0000
+
 openmediavault-sftp (7.0.5) stable; urgency=low
 
   * Fix uninstall paths

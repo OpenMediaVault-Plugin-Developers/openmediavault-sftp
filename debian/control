@@ -9,7 +9,7 @@ Homepage: http://omv-extras.org/
 
 Package: openmediavault-sftp
 Architecture: all
-Depends: openmediavault (>= 7.7.15),
+Depends: openmediavault (>= 8),
          ${misc:Depends}
 Description: sftp server
  Configure sftp server using jails
