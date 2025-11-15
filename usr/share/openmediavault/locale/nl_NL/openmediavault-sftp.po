@@ -3,13 +3,17 @@
 # This file is distributed under the same license as the openmediavault-sftp package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
+# Translators:
+# Stephan Paternotte <stephan@paternottes.net>, 2025
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-sftp\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-27 16:20-0500\n"
+"POT-Creation-Date: 2025-11-15 17:49+0000\n"
 "PO-Revision-Date: 2017-11-27 03:31+0000\n"
+"Last-Translator: Stephan Paternotte <stephan@paternottes.net>, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/openmediavault-plugin-developers/teams/1854/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -18,94 +22,98 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "Allow access to sftp-access group only"
-msgstr ""
+msgstr "Toegang alleen toestaan aan de sftp-toegangsgroep"
 
 msgid "AllowGroups"
-msgstr ""
+msgstr "AllowGroups"
 
 msgid "Create"
-msgstr ""
+msgstr "Aanmaken"
 
 msgid "Created share."
-msgstr ""
+msgstr "Share aanmaken."
 
 msgid "Date & Time"
-msgstr ""
+msgstr "Datum & Tijd"
 
 msgid "Edit"
-msgstr ""
+msgstr "Bewerken"
 
 msgid "Edit share."
-msgstr ""
+msgstr "Share bewerken."
 
 msgid "Enable"
-msgstr ""
+msgstr "Inschakelen"
 
 msgid "Enable keyboard-interactive authentication."
-msgstr ""
+msgstr "Interactieve authenticatie met toetsenbord inschakelen."
 
 msgid "Enable public key authentication."
-msgstr ""
+msgstr "Authenticatie met publieke sleutels inschakelen."
 
 msgid "Enable rsyslog logging"
-msgstr ""
+msgstr "Rsyslogboek inschakelen"
 
 msgid "Extra options"
-msgstr ""
+msgstr "Extra opties"
 
 msgid "Hostname"
-msgstr ""
+msgstr "Hostname"
 
 msgid "Message"
-msgstr ""
+msgstr "Bericht"
 
 msgid "Password authentication"
-msgstr ""
+msgstr "Wachtwoord authenticatie"
 
 msgid ""
 "Please check the <a href='http://www.openbsd.org/cgi-"
 "bin/man.cgi?query=sshd_config&sektion=5' target='_blank'>manual page</a> for"
 " more details."
 msgstr ""
+"Lees de <a href='http://www.openbsd.org/cgi-"
+"bin/man.cgi?query=sshd_config&sektion=5' target='_blank'>handleiding</a> "
+"voor meer informatie."
 
 msgid "Port"
-msgstr ""
+msgstr "Poort"
 
 msgid "Port number. Choose a different one from the default ssh server"
-msgstr ""
+msgstr "Poortnummer. Kies een andere van de standaard ssh server"
 
 msgid "Public key authentication"
-msgstr ""
+msgstr "Authenticatie met publieke sleutel"
 
 msgid "Rsyslog"
-msgstr ""
+msgstr "Rsyslog"
 
 msgid "SFTP"
-msgstr ""
+msgstr "SFTP"
 
 msgid "Select a username ..."
-msgstr ""
+msgstr "Selecteer een gebruikersnaam…"
 
 msgid "Settings"
-msgstr ""
+msgstr "Instellingen"
 
 msgid "Sftp"
-msgstr ""
+msgstr "Sftp"
 
 msgid "Shared folder"
-msgstr ""
+msgstr "Gedeelde map"
 
 msgid "Shared folder to give user access to when connecting via sftp."
 msgstr ""
+"Gedeelde map om gebruiker toegang te geven tot bij het verbinden via sftp."
 
 msgid "Shares"
-msgstr ""
+msgstr "Shares"
 
 msgid "Username"
-msgstr ""
+msgstr "Gebruikersnaam"
 
 msgid "n/a"
-msgstr ""
+msgstr "n.v.t."
 
 msgid "sftp"
-msgstr ""
+msgstr "sftp"
