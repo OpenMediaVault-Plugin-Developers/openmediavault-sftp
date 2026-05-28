@@ -111,40 +111,15 @@ assert_rpc_fails() {
     return 0
 }
 
-# Read dirty modules from dirtymodules.json, fall back to "sftp fstab".
-# Handles both array (["sftp","fstab",...]) and object ({"sftp":true,...}) formats.
-dirty_modules() {
-    jq -r 'if type == "array" then join(" ") else (keys | join(" ")) end' \
-        /var/lib/openmediavault/dirtymodules.json 2>/dev/null \
-        || echo "sftp fstab"
-}
-
-# Deploy each dirty module individually.
-# Failures in sftp/fstab/sharedfolders/systemd are counted as test failures.
-# Failures in unrelated modules (e.g. webdav) are reported as warnings so they
-# don't abort the test over issues that have nothing to do with SFTP.
-# Returns 1 if any critical module failed.
+# Deploy fstab, sftp, systemd in one salt call.
+# Returns 1 if the deploy failed.
 deploy_dirty() {
-    local module critical_fail=false
-    local dirty
-    dirty=$(dirty_modules)
-    info "Dirty modules: $dirty"
-    for module in $dirty; do
-        if omv-salt deploy run "$module" &>/dev/null; then
-            _pass "omv-salt deploy run $module"
-        else
-            case "$module" in
-                sftp|fstab|sharedfolders|systemd)
-                    _fail "omv-salt deploy run $module"
-                    critical_fail=true
-                    ;;
-                *)
-                    info "omv-salt deploy run $module — failed (not critical for SFTP)"
-                    ;;
-            esac
-        fi
-    done
-    $critical_fail && return 1 || return 0
+    if omv-salt deploy run fstab sftp systemd &>/dev/null; then
+        _pass "omv-salt deploy run fstab sftp systemd"
+    else
+        _fail "omv-salt deploy run fstab sftp systemd"
+        return 1
+    fi
 }
 
 # ---------------------------------------------------------------------------
@@ -442,13 +417,8 @@ if [ -z "$SHARE_UUID" ]; then
 elif ! command -v omv-salt &>/dev/null; then
     info "omv-salt not available — skipping deploy and bind-mount tests"
 else
-    info "Running omv-salt deploy run sftp fstab ..."
-    SALT_OUT=$(omv-salt deploy run sftp fstab 2>&1)
-    if [ $? -eq 0 ]; then
-        _pass "omv-salt deploy run sftp fstab"
-    else
-        _fail "omv-salt deploy run sftp fstab" "$(echo "$SALT_OUT" | tail -5)"
-    fi
+    info "Running deploy: fstab sftp systemd ..."
+    deploy_dirty
 
     if mountpoint -q "$BIND_MNT" 2>/dev/null; then
         _pass "bind mount created: $BIND_MNT"
