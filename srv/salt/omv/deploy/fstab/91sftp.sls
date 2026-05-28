@@ -22,6 +22,11 @@ create_sftp_mountpoint_{{ share.uuid }}:
     - require_in:
       - file: append_fstab_entries
 
+unmount_sftp_mountpoint_{{ share.uuid }}:
+  cmd.run:
+    - name: "umount --lazy --quiet '{{ sftppath }}'"
+    - onlyif: "mountpoint -q '{{ sftppath }}' && [ \"$(findmnt --output SOURCE --noheadings '{{ sftppath }}')\" != '{{ sfpath }}' ]"
+
 mount_sftp_mountpoint_{{ share.uuid }}:
   mount.mounted:
     - name: {{ sftppath }}
@@ -31,6 +36,8 @@ mount_sftp_mountpoint_{{ share.uuid }}:
     - mkmnt: True
     - persist: False
     - mount: True
+    - require:
+      - cmd: unmount_sftp_mountpoint_{{ share.uuid }}
 {% else %}
 
 {% if salt['file.directory_exists'](sftppath) %}
