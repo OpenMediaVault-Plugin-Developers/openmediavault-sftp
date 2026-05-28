@@ -1,3 +1,9 @@
+openmediavault-sftp (8.0.1) stable; urgency=low
+
+  * Unmount share before mounting if path changed
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Thu, 28 May 2026 22:35:06 +0000
+
 openmediavault-sftp (8.0) stable; urgency=low
 
   * Update for omv 8
