@@ -1,0 +1,118 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the openmediavault-sftp package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+# Translators:
+# BoneNI, 2026
+# 
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: openmediavault-sftp\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-05-28 22:35+0000\n"
+"PO-Revision-Date: 2017-11-27 03:31+0000\n"
+"Last-Translator: BoneNI, 2026\n"
+"Language-Team: Lao (Laos) (https://app.transifex.com/openmediavault-plugin-developers/teams/1854/lo_LA/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: lo_LA\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgid "Allow access to sftp-access group only"
+msgstr "ອະນຸຍາດໃຫ້ສະເພາະກຸ່ມ sftp-access ເຂົ້າເຖິງເທົ່ານັ້ນ"
+
+msgid "AllowGroups"
+msgstr "ອະນຸຍາດກຸ່ມ"
+
+msgid "Create"
+msgstr "ສ້າງ"
+
+msgid "Created share."
+msgstr "ສ້າງການແບ່ງປັນແລ້ວ."
+
+msgid "Date & Time"
+msgstr "ວັນທີ ແລະ ເວລາ"
+
+msgid "Edit"
+msgstr "ແກ້ໄຂ"
+
+msgid "Edit share."
+msgstr "ແກ້ໄຂການແບ່ງປັນ."
+
+msgid "Enable"
+msgstr "ເປີດໃຊ້ງານ"
+
+msgid "Enable keyboard-interactive authentication."
+msgstr "ເປີດໃຊ້ງານການຢືນຢັນຕົວຕົນແບບໂຕ້ຕອບຜ່ານຄີບອດ."
+
+msgid "Enable public key authentication."
+msgstr "ເປີດໃຊ້ງານການຢືນຢັນຕົວຕົນດ້ວຍກຸນແຈສາທາລະນະ."
+
+msgid "Enable rsyslog logging"
+msgstr "ເປີດໃຊ້ງານການບັນທຶກລັອກ rsyslog"
+
+msgid "Extra options"
+msgstr "ຕົວເລືອກເພີ່ມເຕີມ"
+
+msgid "Hostname"
+msgstr "ຊື່ໂຮສ"
+
+msgid "Message"
+msgstr "ຂໍ້ຄວາມ"
+
+msgid "Password authentication"
+msgstr "ການຢືນຢັນຕົວຕົນດ້ວຍລະຫັດຜ່ານ"
+
+msgid ""
+"Please check the <a href='http://www.openbsd.org/cgi-"
+"bin/man.cgi?query=sshd_config&sektion=5' target='_blank'>manual page</a> for"
+" more details."
+msgstr ""
+"ກະລຸນາກວດສອບ <a href='http://www.openbsd.org/cgi-"
+"bin/man.cgi?query=sshd_config&sektion=5' target='_blank'>ໜ້າຄູ່ມື</a> "
+"ສຳລັບລາຍລະອຽດເພີ່ມເຕີມ."
+
+msgid "Port"
+msgstr "ພອດ"
+
+msgid "Port number. Choose a different one from the default ssh server"
+msgstr "ເລກພອດ. ເລືອກເລກທີ່ແຕກຕ່າງຈາກຄ່າເລີ່ມຕົ້ນຂອງເຊີບເວີ ssh"
+
+msgid "Public key authentication"
+msgstr "ການຢືນຢັນຕົວຕົນດ້ວຍກຸນແຈສາທາລະນະ"
+
+msgid "Rsyslog"
+msgstr "Rsyslog"
+
+msgid "SFTP"
+msgstr "SFTP"
+
+msgid "Select a username ..."
+msgstr "ເລືອກຊື່ຜູ້ໃຊ້ ..."
+
+msgid "Settings"
+msgstr "ການຕັ້ງຄ່າ"
+
+msgid "Sftp"
+msgstr "Sftp"
+
+msgid "Shared folder"
+msgstr "ໂຟນເດີທີ່ແບ່ງປັນ"
+
+msgid "Shared folder to give user access to when connecting via sftp."
+msgstr "ໂຟນເດີທີ່ແບ່ງປັນເພື່ອໃຫ້ຜູ້ໃຊ້ເຂົ້າເຖິງເມື່ອເຊື່ອມຕໍ່ຜ່ານ sftp."
+
+msgid "Shares"
+msgstr "ການແບ່ງປັນ"
+
+msgid "Username"
+msgstr "ຊື່ຜູ້ໃຊ້"
+
+msgid "n/a"
+msgstr "ບໍ່ມີຂໍ້ມູນ"
+
+msgid "sftp"
+msgstr "sftp"

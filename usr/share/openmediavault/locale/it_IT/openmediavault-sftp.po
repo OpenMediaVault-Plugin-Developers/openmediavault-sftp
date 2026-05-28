@@ -3,13 +3,17 @@
 # This file is distributed under the same license as the openmediavault-sftp package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
+# Translators:
+# Giovanni Scafora <scafora.giovanni@gmail.com>, 2026
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-sftp\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-15 17:49+0000\n"
+"POT-Creation-Date: 2026-05-28 22:35+0000\n"
 "PO-Revision-Date: 2017-11-27 03:31+0000\n"
+"Last-Translator: Giovanni Scafora <scafora.giovanni@gmail.com>, 2026\n"
 "Language-Team: Italian (https://app.transifex.com/openmediavault-plugin-developers/teams/1854/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -18,94 +22,101 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 msgid "Allow access to sftp-access group only"
-msgstr ""
+msgstr "Consenti accesso solo al gruppo sftp-access"
 
 msgid "AllowGroups"
-msgstr ""
+msgstr "Gruppi consentiti"
 
 msgid "Create"
-msgstr ""
+msgstr "Crea"
 
 msgid "Created share."
-msgstr ""
+msgstr "Condivisione creata."
 
 msgid "Date & Time"
-msgstr ""
+msgstr "Data e ora"
 
 msgid "Edit"
-msgstr ""
+msgstr "Modifica"
 
 msgid "Edit share."
-msgstr ""
+msgstr "Modifica condivisione."
 
 msgid "Enable"
-msgstr ""
+msgstr "Abilita"
 
 msgid "Enable keyboard-interactive authentication."
-msgstr ""
+msgstr "Abilita l’autenticazione interattiva da tastiera."
 
 msgid "Enable public key authentication."
-msgstr ""
+msgstr "Abilita l’autenticazione tramite chiave pubblica."
 
 msgid "Enable rsyslog logging"
-msgstr ""
+msgstr "Abilita log con rsyslog"
 
 msgid "Extra options"
-msgstr ""
+msgstr "Opzioni aggiuntive"
 
 msgid "Hostname"
-msgstr ""
+msgstr "Hostname"
 
 msgid "Message"
-msgstr ""
+msgstr "Messaggio"
 
 msgid "Password authentication"
-msgstr ""
+msgstr "Autenticazione tramite password"
 
 msgid ""
 "Please check the <a href='http://www.openbsd.org/cgi-"
 "bin/man.cgi?query=sshd_config&sektion=5' target='_blank'>manual page</a> for"
 " more details."
 msgstr ""
+"Consulta la <a href='http://www.openbsd.org/cgi-"
+"bin/man.cgi?query=sshd_config&sektion=5' target='_blank'>pagina del "
+"manuale</a> per maggiori dettagli."
 
 msgid "Port"
-msgstr ""
+msgstr "Porta"
 
 msgid "Port number. Choose a different one from the default ssh server"
 msgstr ""
+"Numero della porta. Scegli un valore diverso da quello del server SSH "
+"predefinito."
 
 msgid "Public key authentication"
-msgstr ""
+msgstr "Autenticazione tramite chiave pubblica"
 
 msgid "Rsyslog"
-msgstr ""
+msgstr "Rsyslog"
 
 msgid "SFTP"
-msgstr ""
+msgstr "SFTP"
 
 msgid "Select a username ..."
-msgstr ""
+msgstr "Seleziona un nome utente..."
 
 msgid "Settings"
-msgstr ""
+msgstr "Impostazioni"
 
 msgid "Sftp"
-msgstr ""
+msgstr "Sftp"
 
 msgid "Shared folder"
-msgstr ""
+msgstr "Cartella condivisa"
 
 msgid "Shared folder to give user access to when connecting via sftp."
 msgstr ""
+"Cartella condivisa a cui concedere l’accesso all’utente durante la "
+"connessione via SFTP."
 
 msgid "Shares"
-msgstr ""
+msgstr "Condivisioni"
 
 msgid "Username"
-msgstr ""
+msgstr "Nome utente"
 
 msgid "n/a"
-msgstr ""
+msgstr "n/d"
 
 msgid "sftp"
-msgstr ""
+msgstr "sftp"
