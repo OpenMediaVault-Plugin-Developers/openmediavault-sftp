@@ -27,4 +27,4 @@ configure_omv_sftp_config:
         config: {{ config | json }}
     - user: root
     - group: root
-    - mode: 644
+    - mode: '0644'

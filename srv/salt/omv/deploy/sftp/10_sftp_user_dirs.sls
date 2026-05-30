@@ -20,7 +20,7 @@ configure_sftp_root_dir:
     - name: "/sftp"
     - user: root
     - group: root
-    - mode: 755
+    - mode: '0755'
 
 {% set config = salt['omv_conf.get']('conf.service.sftp') %}
 {% set existingNames = [] %}
@@ -31,7 +31,7 @@ configure_sftp_user_dir_{{ share.username }}:
     - name: "/sftp/{{ share.username }}"
     - user: root
     - group: root
-    - mode: 755
+    - mode: '0755'
     - makedirs: True
 {% set _ = existingNames.append(share.username) %}
 {% endif %}

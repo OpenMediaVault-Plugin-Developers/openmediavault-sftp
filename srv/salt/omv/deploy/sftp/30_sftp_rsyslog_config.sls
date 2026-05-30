@@ -30,7 +30,7 @@ configure_omv_sftp_rsyslog_config:
         config: {{ config.shares.share | json }}
     - user: root
     - group: root
-    - mode: 644
+    - mode: '0644'
 
 restart_rsyslog_service_sftp1:
   service.running:
