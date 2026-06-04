@@ -126,6 +126,25 @@ class OMVRpcServiceSftp extends \OMV\Rpc\ServiceAbstract
         // Prepare the configuration object.
         $object = new \OMV\Config\ConfigObject('conf.service.sftp.share');
         $object->setAssoc($params);
+        // Ensure the user/shared folder pair is unique. This prevents
+        // duplicate entries that would also result in duplicate fstab
+        // bind mounts.
+        $db->assertIsUniqueByFilter($object, [
+            "operator" => "and",
+            "arg0" => [
+                "operator" => "stringEquals",
+                "arg0" => "username",
+                "arg1" => $object->get("username")
+            ],
+            "arg1" => [
+                "operator" => "stringEquals",
+                "arg0" => "sharedfolderref",
+                "arg1" => $object->get("sharedfolderref")
+            ]
+        ], sprintf(
+            gettext("An SFTP share for the user '%s' and this shared folder already exists."),
+            $object->get("username")
+        ));
         // Set the configuration object.
         $db->set($object);
         // Return the configuration object.

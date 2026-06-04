@@ -1,10 +1,16 @@
 {% set config = salt['omv_conf.get']('conf.service.sftp') %}
-{% set ns = namespace(option='') %}
+{% set ns = namespace(option='', seen=[]) %}
 {% for share in config.shares.share %}
 {% set sfpath = salt['omv_conf.get_sharedfolder_path'](share.sharedfolderref) %}
 {% set sfpath2 = sfpath | escape_blank %}
 {% set sf_config = salt['omv_conf.get']('conf.system.sharedfolder', share.sharedfolderref) %}
 {% set sftppath = '/sftp/' + share.username + '/' + sf_config.name | escape_blank %}
+{# Skip shares whose mount target was already emitted to avoid duplicate #}
+{# fstab entries and redundant mount states for the same path. #}
+{% if sftppath in ns.seen %}
+{% continue %}
+{% endif %}
+{% set ns.seen = ns.seen + [sftppath] %}
 {% set ns.option = '' %}
 {% for privilege in sf_config.privileges.privilege | selectattr('name', 'equalto', share.username) %}
 {% if privilege.perms == 5 %}
