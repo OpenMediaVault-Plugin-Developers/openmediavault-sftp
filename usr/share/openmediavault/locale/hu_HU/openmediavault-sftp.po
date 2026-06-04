@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-sftp\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-04 01:03+0000\n"
+"POT-Creation-Date: 2026-06-04 17:36+0000\n"
 "PO-Revision-Date: 2017-11-27 03:31+0000\n"
 "Last-Translator: Gyuris Gellért <jobel@ujevangelizacio.hu>, 2024\n"
 "Language-Team: Hungarian (Hungary) (https://app.transifex.com/openmediavault-plugin-developers/teams/1854/hu_HU/)\n"
@@ -26,6 +26,9 @@ msgstr "Hozzáférés engedélyezése csak az sftp-access csoport számára"
 
 msgid "AllowGroups"
 msgstr "Csoportengedélyek"
+
+msgid "An SFTP share for the user '%s' and this shared folder already exists."
+msgstr ""
 
 msgid "Create"
 msgstr "Létrehozás"

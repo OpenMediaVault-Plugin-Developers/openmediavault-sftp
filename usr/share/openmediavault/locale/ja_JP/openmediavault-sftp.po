@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-sftp\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-04 01:03+0000\n"
+"POT-Creation-Date: 2026-06-04 17:36+0000\n"
 "PO-Revision-Date: 2017-11-27 03:31+0000\n"
 "Last-Translator: Toshihiro Kan <kansuke4649@gmail.com>, 2023\n"
 "Language-Team: Japanese (Japan) (https://app.transifex.com/openmediavault-plugin-developers/teams/1854/ja_JP/)\n"
@@ -26,6 +26,9 @@ msgstr "sftp-access グループだけにアクセスを許可"
 
 msgid "AllowGroups"
 msgstr "許可グループ"
+
+msgid "An SFTP share for the user '%s' and this shared folder already exists."
+msgstr ""
 
 msgid "Create"
 msgstr "作成"
