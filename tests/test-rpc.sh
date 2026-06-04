@@ -5,8 +5,9 @@
 #
 # Exercises all Sftp RPC methods: settings CRUD, share CRUD, validation, a
 # deploy cycle that verifies the /sftp bind mount is created and cleaned up,
-# and a regression test for the shared-folder path-change bug (stale bind
-# mount not updated when the shared folder's path changes in OMV).
+# a regression test for the shared-folder path-change bug (stale bind mount
+# not updated when the shared folder's path changes in OMV), and a regression
+# test that duplicate user/shared-folder share entries are rejected.
 #
 # Prerequisites:
 #   <sharedfolder> — name or UUID of an existing OMV shared folder
@@ -405,6 +406,17 @@ assert_rpc_fails "setShare — user without privileges" "Sftp" "setShare" \
     "$(jq -n \
         --arg uuid "$OMV_NEW_UUID" --arg sfref "$SF_REF" \
         '{uuid:$uuid,sharedfolderref:$sfref,username:"noprivuser_sftprpctest"}')"
+
+# Duplicate user/shared-folder pair — a share for (TEST_USER, SF_REF) was
+# created in the CRUD section above, so creating a second one must be rejected.
+if [ -n "$SHARE_UUID" ]; then
+    assert_rpc_fails "setShare — duplicate user/shared folder pair rejected" \
+        "Sftp" "setShare" "$(jq -n \
+            --arg uuid "$OMV_NEW_UUID" --arg sfref "$SF_REF" --arg user "$TEST_USER" \
+            '{uuid:$uuid,sharedfolderref:$sfref,username:$user}')"
+else
+    info "Skipping duplicate-pair test — no test share was created"
+fi
 
 # ===========================================================================
 section "Integration — deploy and bind mount"
