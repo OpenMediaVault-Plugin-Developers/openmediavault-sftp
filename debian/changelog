@@ -1,3 +1,10 @@
+openmediavault-sftp (8.0.3) stable; urgency=low
+
+  * Reject duplicate user/shared folder share entries and skip duplicate
+    fstab bind mounts for the same mount target
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Thu, 04 Jun 2026 17:35:54 +0000
+
 openmediavault-sftp (8.0.2) stable; urgency=low
 
   * Order share bind mounts after their source filesystem and before the
