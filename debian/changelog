@@ -1,3 +1,10 @@
+openmediavault-sftp (8.0.2) stable; urgency=low
+
+  * Order share bind mounts after their source filesystem and before the
+    sftp service to avoid binding/serving unmounted paths at boot
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Thu, 04 Jun 2026 01:01:30 +0000
+
 openmediavault-sftp (8.0.1) stable; urgency=low
 
   * Unmount share before mounting if path changed

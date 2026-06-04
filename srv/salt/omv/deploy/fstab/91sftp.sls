@@ -18,7 +18,7 @@
 create_sftp_mountpoint_{{ share.uuid }}:
   file.accumulated:
     - filename: "/etc/fstab"
-    - text: "{{ sfpath2 }}\t\t{{ sftppath }}\tnone\t{{ ns.option }}\t0 0"
+    - text: "{{ sfpath2 }}\t\t{{ sftppath }}\tnone\t{{ ns.option }},x-systemd.requires-mounts-for={{ sfpath2 }},x-systemd.before=omv-sftp.service\t0 0"
     - require_in:
       - file: append_fstab_entries
 

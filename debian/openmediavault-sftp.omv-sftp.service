@@ -1,6 +1,6 @@
 [Unit]
 Description=openmediavault sftp plugin service
-After=network.target auditd.service
+After=network.target auditd.service local-fs.target remote-fs.target
 
 [Service]
 ExecStart=/usr/sbin/sshd -D -f /etc/ssh/omv_sftp_config
