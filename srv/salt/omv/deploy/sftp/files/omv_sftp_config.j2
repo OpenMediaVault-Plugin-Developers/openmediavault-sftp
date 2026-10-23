@@ -1,4 +1,3 @@
-{% set protocol = salt['pillar.get']('default:OMV_SFTPD_PROTOCOL', '2') -%}
 {% set syslogFacility = salt['pillar.get']('default:OMV_SFTP_SYSLOGFACILITY', 'AUTH') -%}
 {% set logLevel = salt['pillar.get']('default:OMV_SFTP_LOGLEVEL', 'INFO') -%}
 {% set loginGraceTime = salt['pillar.get']('default:OMV_SFTP_LOGINGRACETIME', '120') -%}
@@ -7,7 +6,7 @@
 {% set hostbasedAuth = salt['pillar.get']('default:OMV_SFTP_HOSTBASEDAUTHENTICATION', 'no') -%}
 {% set permitEmptyPasswords = salt['pillar.get']('default:OMV_SFTP_PERMITEMPTYPASSWORDS', 'no') -%}
 {% set compression = salt['pillar.get']('default:OMV_SFTP_COMPRESSION', 'yes') -%}
-{% set challengeResponseAuth = salt['pillar.get']('default:OMV_SFTP_CHALLENGERESPONSEAUTHENTICATION', 'no') -%}
+{% set kbdInteractiveAuth = salt['pillar.get']('default:OMV_SFTP_KBDINTERACTIVEAUTHENTICATION', salt['pillar.get']('default:OMV_SFTP_CHALLENGERESPONSEAUTHENTICATION', 'no')) -%}
 {% set printMotd = salt['pillar.get']('default:OMV_SFTP_PRINTMOTD', 'no') -%}
 {% set printLastLog = salt['pillar.get']('default:OMV_SFTP_PRINTLASTLOG', 'yes') -%}
 {% set tcpKeepAlive = salt['pillar.get']('default:OMV_SFTP_TCPKEEPALIVE', 'yes') -%}
@@ -19,15 +18,12 @@
 {% set sftpSubsystem = salt['pillar.get']('default:OMV_SFTP_SUBSYSTEM_SFTP', 'internal-sftp -l INFO') -%}
 {% set usePam = salt['pillar.get']('default:OMV_SFTP_USEPAM', 'yes') -%}
 {% set addressFamily = salt['pillar.get']('default:OMV_SFTP_ADDRESSFAMILY', 'any') -%}
-{% set logFile = salt['pillar.get']('default:OMV_SFTP_LOGFILE', '/var/log/openmediavault-sftp.log') -%}
 {% set matchGroup = salt['pillar.get']('default:OMV_SFTP_MATCHGROUP', 'sftp-access') -%}
 {% set chrootDir = salt['pillar.get']('default:OMV_SFTP_CHROOTDIR', '/sftp/%u') -%}
 {% set forceCmd = salt['pillar.get']('default:OMV_SFTP_FORCECOMMAND', 'internal-sftp -l INFO') -%}
 {% set rootLogin = salt['pillar.get']('default:OMV_SFTP_PERMITROOTLOGIN', 'no') -%}
 
-Protocol {{ protocol }}
 HostKey /etc/ssh/ssh_host_rsa_key
-HostKey /etc/ssh/ssh_host_dsa_key
 HostKey /etc/ssh/ssh_host_ecdsa_key
 HostKey /etc/ssh/ssh_host_ed25519_key
 SyslogFacility {{ syslogFacility }}
@@ -37,7 +33,7 @@ StrictModes {{ strictModes }}
 IgnoreRhosts {{ ignoreRhosts }}
 HostbasedAuthentication {{ hostbasedAuth }}
 PermitEmptyPasswords {{ permitEmptyPasswords }}
-ChallengeResponseAuthentication {{ challengeResponseAuth }}
+KbdInteractiveAuthentication {{ kbdInteractiveAuth }}
 PrintMotd {{ printMotd }}
 PrintLastLog {{ printLastLog }}
 TCPKeepAlive {{ tcpKeepAlive }}
@@ -55,11 +51,13 @@ AddressFamily any
 {% else -%}
 AddressFamily inet
 {% endif -%}
-{% if config.extraoptions | length > 0 -%}
-{{ config.extraoptions }}
-{% endif -%}
 {% if config.allowgroups -%}
 AllowGroups {{ matchGroup }}
+{% endif -%}
+{#- Extra options go last before the Match block, so a Match block in the #}
+{#- extra options can not capture the global options above. #}
+{% if config.extraoptions | length > 0 -%}
+{{ config.extraoptions }}
 {% endif -%}
 Match Group {{ matchGroup }}
   ChrootDirectory {{ chrootDir }}

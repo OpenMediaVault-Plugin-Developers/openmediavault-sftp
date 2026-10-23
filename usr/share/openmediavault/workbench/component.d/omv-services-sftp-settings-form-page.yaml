@@ -33,7 +33,7 @@ data:
       - type: checkbox
         name: pubkeyauthentication
         label: _("Public key authentication")
-        value: true
+        value: false
         hint: _("Enable public key authentication.")
       - type: checkbox
         name: allowgroups
@@ -42,9 +42,9 @@ data:
         hint: _("Allow access to sftp-access group only")
       - type: checkbox
         name: rsyslog
-        label: _("Rsyslog")
-        value: false
-        hint: _("Enable rsyslog logging")
+        label: _("Log chrooted sessions")
+        value: true
+        hint: _("Log the SFTP sessions of chrooted users (members of the sftp-access group) to the system journal. Shown in the SFTP log.")
       - type: textarea
         name: extraoptions
         label: _("Extra options")

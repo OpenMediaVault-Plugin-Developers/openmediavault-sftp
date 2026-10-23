@@ -1,0 +1,53 @@
+#!/bin/bash
+#
+# Unmount and remove /sftp/<user>/<folder> mount points that are no longer
+# configured. The expected mount points are passed as arguments, everything
+# else below /sftp/*/ that is mounted is unmounted and its (then empty)
+# directory removed.
+#
+# Usage: omv-sftp-cleanup-mounts [--check] [<expected path> ...]
+#   --check  Only report whether there is anything to clean up
+#            (exit 0 = stale entries found, exit 1 = nothing to do).
+#
+# The environment variable SFTP_ROOT overrides the /sftp root directory,
+# this is used by the tests.
+
+shopt -s nullglob
+
+root="${SFTP_ROOT:-/sftp}"
+
+check=0
+if [ "${1:-}" = "--check" ]; then
+    check=1
+    shift
+fi
+
+declare -A keep
+for p in "$@"; do
+    keep["${p%/}"]=1
+done
+
+found=0
+for d in "${root}"/*/*/; do
+    d="${d%/}"
+    [ -n "${keep[$d]:-}" ] && continue
+    if mountpoint -q "${d}"; then
+        found=1
+        [ ${check} -eq 1 ] && break
+        umount --lazy "${d}" || continue
+        rmdir "${d}" 2>/dev/null || :
+    elif [ "$(basename "${d}")" != "dev" ] && \
+         [ -z "$(ls -A "${d}" 2>/dev/null)" ]; then
+        # Left over empty mount point directory. The 'dev' directory
+        # holds the rsyslog socket and is managed elsewhere.
+        found=1
+        [ ${check} -eq 1 ] && break
+        rmdir "${d}" 2>/dev/null || :
+    fi
+done
+
+if [ ${check} -eq 1 ]; then
+    [ ${found} -eq 1 ] && exit 0
+    exit 1
+fi
+exit 0

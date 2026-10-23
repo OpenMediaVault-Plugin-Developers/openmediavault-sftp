@@ -24,8 +24,21 @@ set -e
 . /etc/default/openmediavault
 . /usr/share/openmediavault/scripts/helper-functions
 
+OMV_SFTP_MATCHGROUP=${OMV_SFTP_MATCHGROUP:-"sftp-access"}
+
 remove_action() {
     dpkg-trigger update-workbench
+
+    # The fstab salt state of the plugin is gone now, so redeploying
+    # removes the SFTP bind mounts from /etc/fstab.
+    omv-salt deploy run fstab || :
+
+    # Unmount the SFTP bind mounts.
+    for mp in /sftp/*/*; do
+        if mountpoint -q "${mp}"; then
+            umount --lazy "${mp}" || :
+        fi
+    done
 }
 
 case "$1" in
@@ -33,6 +46,17 @@ case "$1" in
         remove_action
 
         omv_config_delete "/config/services/sftp"
+
+        # Remove the rsyslog sockets and the empty chroot directories.
+        # Do not cross into anything that is still mounted.
+        if [ -d "/sftp" ]; then
+            find /sftp -xdev -type s -path '/sftp/*/dev/log' -delete || :
+            find /sftp -xdev -depth -type d -empty -delete || :
+        fi
+
+        if getent group "${OMV_SFTP_MATCHGROUP}" >/dev/null 2>&1; then
+            groupdel "${OMV_SFTP_MATCHGROUP}" || :
+        fi
 
         # Remove config and log files
         if [ -f "/etc/rsyslog.d/openmediavault-sftp.conf" ]; then
@@ -58,5 +82,7 @@ case "$1" in
         exit 1
     ;;
 esac
+
+#DEBHELPER#
 
 exit 0

@@ -1,0 +1,1 @@
+rm_conffile /etc/logrotate.d/openmediavault-sftp 8.1.0~

@@ -107,16 +107,14 @@ class OMVRpcServiceSftp extends \OMV\Rpc\ServiceAbstract
         $db = \OMV\Config\Database::getInstance();
         // Check to see if user has read only or read/write privileges
         // If not, exit with error
-        $perms = 0;
         $objectSF = $db->get('conf.system.sharedfolder', $params['sharedfolderref']);
-        if (FALSE === $objectSF->isEmpty('privileges')) {
-            foreach ($objectSF->get('privileges.privilege') as $objectv) {
-                if ($objectv['name'] === $params['username']) {
-                    $perms = intval($objectv['perms']);
-                    break;
-                }
-            }
+        // The 'dev' directory inside the chroot is used for the rsyslog
+        // socket, a shared folder mounted there would collide with it.
+        if ('dev' === $objectSF->get('name')) {
+            throw new \OMV\Exception(
+                "A shared folder named 'dev' can not be used for SFTP.");
         }
+        $perms = $this->getEffectivePerms($objectSF, $params['username']);
         if (($perms !== 5) && ($perms !== 7)) {
             throw new \OMV\Exception(
                 "'%s' does not have read only or read/write privileges to this shared folder.",
@@ -160,14 +158,6 @@ class OMVRpcServiceSftp extends \OMV\Rpc\ServiceAbstract
         // Get the configuration object.
         $db = \OMV\Config\Database::getInstance();
         $object = $db->get('conf.service.sftp.share', $params['uuid']);
-        // Umount path
-        $sfObject = $db->get('conf.system.sharedfolder', $object->get('sharedfolderref'));
-        $dirName = sprintf('/sftp/%s/%s', $object->get('username'), $sfObject->get('name'));
-        if (file_exists($dirName)) {
-            $cmd = sprintf('omv-removesftpmount "%s"', $dirName);
-            $process = new \OMV\System\Process($cmd);
-            $process->execute($output, $result);
-        }
         // Delete the configuration object.
         $db->delete($object);
         // Apply changes immmediately
@@ -177,5 +167,33 @@ class OMVRpcServiceSftp extends \OMV\Rpc\ServiceAbstract
         ], $context);
         // Return the deleted configuration object.
         return $object->getAssoc();
+    }
+
+    private function getEffectivePerms($sfObject, $username)
+    {
+        if (TRUE === $sfObject->isEmpty('privileges')) {
+            return 0;
+        }
+        $user = new \OMV\System\User($username);
+        $groups = $user->exists() ? $user->getGroups() : [];
+        if (!is_array($groups)) {
+            $groups = [];
+        }
+        $result = 0;
+        foreach ($sfObject->get('privileges.privilege') as $objectv) {
+            $matches = ((('user' === $objectv['type']) &&
+                ($objectv['name'] === $username)) ||
+                (('group' === $objectv['type']) &&
+                in_array($objectv['name'], $groups, TRUE)));
+            if (!$matches) {
+                continue;
+            }
+            $perms = intval($objectv['perms']);
+            if (0 === $perms) {
+                return 0;
+            }
+            $result = max($result, $perms);
+        }
+        return $result;
     }
 }

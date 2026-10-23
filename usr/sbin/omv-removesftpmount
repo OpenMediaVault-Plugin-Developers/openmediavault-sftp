@@ -2,7 +2,7 @@
 
 mp=$1
 
-if [ ${mp::6} = "/sftp/"  ]; then
+if [ "${mp::6}" = "/sftp/" ]; then
     # Check if directory exists
     if [ -d "${mp}" ]; then
         # Check if directory is mounted
@@ -12,7 +12,10 @@ if [ ${mp::6} = "/sftp/"  ]; then
                 exit 1
             fi
         fi
-        # Remove directory
-        rm -rf "${mp}"
+        # Remove directory. Never remove its content, if it is not empty
+        # then something is still mounted on it or it holds user data.
+        if ! rmdir "${mp}"; then
+            exit 1
+        fi
     fi
 fi

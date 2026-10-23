@@ -45,13 +45,20 @@ remove_omv_sftp_rsyslog_config:
   file.absent:
     - name: {{ rsyslogConf }}
 
+# Only remove the rsyslog sockets and their directories. Skip a 'dev'
+# directory that is a mount point, it is a shared folder holding user data.
 delete_dev_log_and_empty_dev_directory:
   cmd.run:
-    - name: rm -f /sftp/*/dev/log || true
-
-delete_dev_directory:
-  cmd.run:
-    - name: rmdir /sftp/*/dev || true
+    - name: >-
+        for d in /sftp/*/dev; do
+        mountpoint -q "${d}" && continue;
+        [ -S "${d}/log" ] && rm -f "${d}/log";
+        rmdir "${d}" 2>/dev/null;
+        done; true
+    - onlyif: >-
+        for d in /sftp/*/dev; do
+        [ -d "${d}" ] && ! mountpoint -q "${d}" && exit 0;
+        done; exit 1
 
 restart_rsyslog_service_sftp2:
   service.running:

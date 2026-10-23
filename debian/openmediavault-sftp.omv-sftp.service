@@ -3,10 +3,17 @@ Description=openmediavault sftp plugin service
 After=network.target auditd.service local-fs.target remote-fs.target
 
 [Service]
+ExecStartPre=/usr/sbin/sshd -t -f /etc/ssh/omv_sftp_config
 ExecStart=/usr/sbin/sshd -D -f /etc/ssh/omv_sftp_config
+ExecReload=/usr/sbin/sshd -t -f /etc/ssh/omv_sftp_config
 ExecReload=/bin/kill -HUP $MAINPID
 KillMode=process
 Restart=on-failure
+# sshd needs the privilege separation directory, do not rely on the
+# ssh.service unit to create it.
+RuntimeDirectory=sshd
+RuntimeDirectoryMode=0755
+RuntimeDirectoryPreserve=yes
 
 [Install]
 WantedBy=multi-user.target

@@ -1,10 +1,28 @@
-{%- set logFile = salt['pillar.get']('default:OMV_SFTP_LOGFILE', '/var/log/openmediavault-sftp.log') %}
+{#- The chrooted internal-sftp can not reach /dev/log, so rsyslog creates a #}
+{#- logging socket inside every chroot. The messages are bound to their own #}
+{#- ruleset and passed on to the systemd journal, where they show up like #}
+{#- any other syslog message, e.g. 'journalctl -t internal-sftp'. #}
+{#- Note, omjournal needs a list template with plain 'outname' properties, #}
+{#- neither the default template nor 'jsonf' properties get logged. #}
+module(load="omjournal")
+module(load="mmrm1stspace")
+
+template(name="omv_sftp_journal" type="list") {
+  property(outname="MESSAGE" name="msg" droplastlf="on")
+  property(outname="SYSLOG_IDENTIFIER" name="app-name")
+  property(outname="SYSLOG_PID" name="procid")
+  property(outname="SYSLOG_FACILITY" name="syslogfacility")
+  property(outname="PRIORITY" name="syslogseverity")
+}
+
+ruleset(name="omv_sftp") {
+  action(type="mmrm1stspace")
+  action(type="omjournal" template="omv_sftp_journal")
+}
 {%- set existingNames = [] -%}
 {%- for share in config %}
 {%- if share.username not in existingNames %}
-input(type="imuxsock" Socket="/sftp/{{ share.username }}/dev/log" CreatePath="on")
+input(type="imuxsock" Socket="/sftp/{{ share.username }}/dev/log" CreatePath="on" Ruleset="omv_sftp")
 {%- set _ = existingNames.append(share.username) %}
 {%- endif %}
 {%- endfor %}
-if $programname == 'internal-sftp' then {{ logFile }}
-& stop
