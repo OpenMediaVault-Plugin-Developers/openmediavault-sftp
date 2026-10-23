@@ -1,3 +1,29 @@
+openmediavault-sftp (8.1.0) stable; urgency=low
+
+  * Unmount and remove stale bind mounts after a share is edited or
+    deleted, a shared folder is renamed or privileges are revoked
+  * Fix mounting of shared folders with blanks in their names and quote
+    paths in shell commands
+  * Detect wrong bind mounts by device/inode instead of remounting on
+    every deploy
+  * Take group privileges into account (same rules as SMB) and match
+    privileges by type
+  * Recreate a bind mount when the privileges change between read only and
+    read/write, so lowered privileges take effect without a reboot
+  * Reject shared folders named 'dev' and never delete user data when
+    removing the rsyslog sockets
+  * Never remove mount point content in omv-removesftpmount
+  * Pass the log messages of chrooted sessions on to the systemd journal
+    instead of writing /var/log/openmediavault-sftp.log, and show the
+    journal in the log viewer
+  * Create /run/sshd and check the sshd config before start and reload
+  * Remove obsolete sshd options and place extra options before the
+    Match block
+  * Remove bind mounts on package removal and clean up on purge
+  * Align settings form defaults with the datamodel
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Fri, 23 Oct 2026 15:01:39 +0000
+
 openmediavault-sftp (8.0.3) stable; urgency=low
 
   * Reject duplicate user/shared folder share entries and skip duplicate
