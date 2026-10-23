@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-sftp\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-04 17:36+0000\n"
+"POT-Creation-Date: 2026-10-23 16:29+0000\n"
 "PO-Revision-Date: 2017-11-27 03:31+0000\n"
 "Last-Translator: omv nas <myomv100@gmail.com>, 2023\n"
 "Language-Team: Arabic (Saudi Arabia) (https://app.transifex.com/openmediavault-plugin-developers/teams/1854/ar_SA/)\n"
@@ -54,14 +54,19 @@ msgstr "تفعيل المصادقة التفاعلية على لوحة المف�
 msgid "Enable public key authentication."
 msgstr "تفعيل مصادقة المفتاح العام."
 
-msgid "Enable rsyslog logging"
-msgstr "تفعيل تسجيل الأحداث البعيد بواسطة rsyslog"
-
 msgid "Extra options"
 msgstr "خيارات اضافية"
 
 msgid "Hostname"
 msgstr "اسم المضيف"
+
+msgid "Log chrooted sessions"
+msgstr ""
+
+msgid ""
+"Log the SFTP sessions of chrooted users (members of the sftp-access group) "
+"to the system journal. Shown in the SFTP log."
+msgstr ""
 
 msgid "Message"
 msgstr "رسالة"
@@ -86,9 +91,6 @@ msgstr "رقم المنفذ. اختر منفذا يختلف عن منفذ خاد
 
 msgid "Public key authentication"
 msgstr "مصادقة المفتاح العام"
-
-msgid "Rsyslog"
-msgstr "سجل الأحداث البعيد Rsyslog"
 
 msgid "SFTP"
 msgstr "SFTP"

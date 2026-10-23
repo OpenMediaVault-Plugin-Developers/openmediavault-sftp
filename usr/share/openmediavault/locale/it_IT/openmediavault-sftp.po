@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-sftp\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-04 17:36+0000\n"
+"POT-Creation-Date: 2026-10-23 16:29+0000\n"
 "PO-Revision-Date: 2017-11-27 03:31+0000\n"
 "Last-Translator: Giovanni Scafora <scafora.giovanni@gmail.com>, 2026\n"
 "Language-Team: Italian (https://app.transifex.com/openmediavault-plugin-developers/teams/1854/it/)\n"
@@ -54,14 +54,19 @@ msgstr "Abilita l’autenticazione interattiva da tastiera."
 msgid "Enable public key authentication."
 msgstr "Abilita l’autenticazione tramite chiave pubblica."
 
-msgid "Enable rsyslog logging"
-msgstr "Abilita log con rsyslog"
-
 msgid "Extra options"
 msgstr "Opzioni aggiuntive"
 
 msgid "Hostname"
 msgstr "Hostname"
+
+msgid "Log chrooted sessions"
+msgstr ""
+
+msgid ""
+"Log the SFTP sessions of chrooted users (members of the sftp-access group) "
+"to the system journal. Shown in the SFTP log."
+msgstr ""
 
 msgid "Message"
 msgstr "Messaggio"
@@ -88,9 +93,6 @@ msgstr ""
 
 msgid "Public key authentication"
 msgstr "Autenticazione tramite chiave pubblica"
-
-msgid "Rsyslog"
-msgstr "Rsyslog"
 
 msgid "SFTP"
 msgstr "SFTP"

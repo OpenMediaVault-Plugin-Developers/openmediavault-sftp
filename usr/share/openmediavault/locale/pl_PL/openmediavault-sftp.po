@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-sftp\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-04 17:36+0000\n"
+"POT-Creation-Date: 2026-10-23 16:29+0000\n"
 "PO-Revision-Date: 2017-11-27 03:31+0000\n"
 "Last-Translator: Rysiek Jurczy, 2023\n"
 "Language-Team: Polish (Poland) (https://app.transifex.com/openmediavault-plugin-developers/teams/1854/pl_PL/)\n"
@@ -55,14 +55,19 @@ msgstr "Włącz uwierzytelnianie za pomocą klawiatury."
 msgid "Enable public key authentication."
 msgstr "Włącz uwierzytelnianie kluczem publicznym."
 
-msgid "Enable rsyslog logging"
-msgstr "Włącz zapisywanie do rsyslog"
-
 msgid "Extra options"
 msgstr "Dodatkowe opcje"
 
 msgid "Hostname"
 msgstr "Nazwa hosta"
+
+msgid "Log chrooted sessions"
+msgstr ""
+
+msgid ""
+"Log the SFTP sessions of chrooted users (members of the sftp-access group) "
+"to the system journal. Shown in the SFTP log."
+msgstr ""
 
 msgid "Message"
 msgstr "Wiadomość"
@@ -87,9 +92,6 @@ msgstr "Numer portu. Wybierz inny niż domyślny serwer ssh"
 
 msgid "Public key authentication"
 msgstr "Uwierzytelnianie kluczem publicznym"
-
-msgid "Rsyslog"
-msgstr "Rsyslog"
 
 msgid "SFTP"
 msgstr "SFTP"

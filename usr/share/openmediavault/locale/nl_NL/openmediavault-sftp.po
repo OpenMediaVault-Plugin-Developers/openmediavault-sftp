@@ -4,16 +4,16 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Stephan Paternotte <stephan@paternottes.net>, 2025
+# Stephan Paternotte <stephan@paternottes.net>, 2026
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-sftp\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-04 17:36+0000\n"
+"POT-Creation-Date: 2026-10-23 16:29+0000\n"
 "PO-Revision-Date: 2017-11-27 03:31+0000\n"
-"Last-Translator: Stephan Paternotte <stephan@paternottes.net>, 2025\n"
+"Last-Translator: Stephan Paternotte <stephan@paternottes.net>, 2026\n"
 "Language-Team: Dutch (https://app.transifex.com/openmediavault-plugin-developers/teams/1854/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,6 +29,7 @@ msgstr "AllowGroups"
 
 msgid "An SFTP share for the user '%s' and this shared folder already exists."
 msgstr ""
+"Een SFTP-share voor de gebruiker '%s' en deze gedeelde map bestaat al."
 
 msgid "Create"
 msgstr "Aanmaken"
@@ -54,14 +55,19 @@ msgstr "Interactieve authenticatie met toetsenbord inschakelen."
 msgid "Enable public key authentication."
 msgstr "Authenticatie met publieke sleutels inschakelen."
 
-msgid "Enable rsyslog logging"
-msgstr "Rsyslogboek inschakelen"
-
 msgid "Extra options"
 msgstr "Extra opties"
 
 msgid "Hostname"
 msgstr "Hostname"
+
+msgid "Log chrooted sessions"
+msgstr ""
+
+msgid ""
+"Log the SFTP sessions of chrooted users (members of the sftp-access group) "
+"to the system journal. Shown in the SFTP log."
+msgstr ""
 
 msgid "Message"
 msgstr "Bericht"
@@ -86,9 +92,6 @@ msgstr "Poortnummer. Kies een andere van de standaard ssh server"
 
 msgid "Public key authentication"
 msgstr "Authenticatie met publieke sleutel"
-
-msgid "Rsyslog"
-msgstr "Rsyslog"
 
 msgid "SFTP"
 msgstr "SFTP"

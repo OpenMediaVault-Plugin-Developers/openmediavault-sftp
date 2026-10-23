@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-sftp\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-04 17:36+0000\n"
+"POT-Creation-Date: 2026-10-23 16:29+0000\n"
 "PO-Revision-Date: 2017-11-27 03:31+0000\n"
 "Last-Translator: BoneNI, 2026\n"
 "Language-Team: Lao (Laos) (https://app.transifex.com/openmediavault-plugin-developers/teams/1854/lo_LA/)\n"
@@ -54,14 +54,19 @@ msgstr "ເປີດໃຊ້ງານການຢືນຢັນຕົວຕົ
 msgid "Enable public key authentication."
 msgstr "ເປີດໃຊ້ງານການຢືນຢັນຕົວຕົນດ້ວຍກຸນແຈສາທາລະນະ."
 
-msgid "Enable rsyslog logging"
-msgstr "ເປີດໃຊ້ງານການບັນທຶກລັອກ rsyslog"
-
 msgid "Extra options"
 msgstr "ຕົວເລືອກເພີ່ມເຕີມ"
 
 msgid "Hostname"
 msgstr "ຊື່ໂຮສ"
+
+msgid "Log chrooted sessions"
+msgstr ""
+
+msgid ""
+"Log the SFTP sessions of chrooted users (members of the sftp-access group) "
+"to the system journal. Shown in the SFTP log."
+msgstr ""
 
 msgid "Message"
 msgstr "ຂໍ້ຄວາມ"
@@ -86,9 +91,6 @@ msgstr "ເລກພອດ. ເລືອກເລກທີ່ແຕກຕ່າ�
 
 msgid "Public key authentication"
 msgstr "ການຢືນຢັນຕົວຕົນດ້ວຍກຸນແຈສາທາລະນະ"
-
-msgid "Rsyslog"
-msgstr "Rsyslog"
 
 msgid "SFTP"
 msgstr "SFTP"

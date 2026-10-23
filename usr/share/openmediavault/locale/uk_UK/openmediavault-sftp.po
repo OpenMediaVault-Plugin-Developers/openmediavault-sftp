@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-sftp\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-04 17:36+0000\n"
+"POT-Creation-Date: 2026-10-23 16:29+0000\n"
 "PO-Revision-Date: 2017-11-27 03:31+0000\n"
 "Last-Translator: dsafsadf <heneral@gmail.com>, 2021\n"
 "Language-Team: Ukrainian (https://app.transifex.com/openmediavault-plugin-developers/teams/1854/uk/)\n"
@@ -55,13 +55,18 @@ msgstr ""
 msgid "Enable public key authentication."
 msgstr ""
 
-msgid "Enable rsyslog logging"
-msgstr ""
-
 msgid "Extra options"
 msgstr "Додаткові опції"
 
 msgid "Hostname"
+msgstr ""
+
+msgid "Log chrooted sessions"
+msgstr ""
+
+msgid ""
+"Log the SFTP sessions of chrooted users (members of the sftp-access group) "
+"to the system journal. Shown in the SFTP log."
 msgstr ""
 
 msgid "Message"
@@ -84,9 +89,6 @@ msgstr "Номер порта. Виберіть інший із типового
 
 msgid "Public key authentication"
 msgstr "Аутентифікація за відкритим ключем"
-
-msgid "Rsyslog"
-msgstr ""
 
 msgid "SFTP"
 msgstr "SFTP"
