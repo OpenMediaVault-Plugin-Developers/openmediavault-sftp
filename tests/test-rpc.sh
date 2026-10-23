@@ -9,6 +9,13 @@
 # not updated when the shared folder's path changes in OMV), and a regression
 # test that duplicate user/shared-folder share entries are rejected.
 #
+# Further checks: a shared folder named 'dev' is rejected, a deploy does not
+# remount unchanged bind mounts, renaming the shared folder (to a name with
+# a space) removes the stale mount point, logging of chrooted sessions to the
+# journal and the log viewer, disabling rsyslog, the generated sshd config
+# and service unit, revoked/group/denied privileges, and omv-removesftpmount
+# never deleting data.
+#
 # Prerequisites:
 #   <sharedfolder> — name or UUID of an existing OMV shared folder
 #   <username>     — system user with read-only (5) or read-write (7)
@@ -18,9 +25,12 @@
 #   omv-rpc -u admin ShareMgmt getList \
 #     '{"start":0,"limit":25,"sortfield":null,"sortdir":null}'
 #
-# WARNING: This script transiently modifies SFTP settings (port, auth options)
-# and creates/deletes test SFTP shares.  Run on a test system or during a
-# maintenance window.
+# WARNING: This script transiently modifies SFTP settings (port, auth options,
+# rsyslog, extra options) and the privileges of the shared folder, renames
+# the shared folder, creates/deletes test SFTP shares, temporary groups and a
+# temporary shared folder named 'dev', and writes probe messages tagged
+# 'internal-sftp' to the journal.  Everything except the journal messages is
+# restored on exit.  Run on a test system or during a maintenance window.
 
 set -uo pipefail
 
@@ -123,6 +133,72 @@ deploy_dirty() {
     fi
 }
 
+# Set the SFTP settings to the original ones, modified by a jq filter,
+# e.g. set_settings '.rsyslog = false'.  set_settings '.' restores them.
+set_settings() {
+    SETTINGS_CHANGED=true
+    rpc "Sftp" "setSettings" \
+        "$(echo "$ORIG_SETTINGS" | jq "del(.shares) | $1")" >/dev/null
+}
+
+# Replace the privileges of the test shared folder with a JSON array.
+set_privileges() {
+    PRIVS_CHANGED=true
+    rpc "ShareMgmt" "setPrivileges" "$(jq -n \
+        --arg uuid "$SF_REF" --argjson privs "$1" \
+        '{uuid:$uuid,privileges:$privs}')" >/dev/null
+}
+
+restore_privileges() {
+    set_privileges "$ORIG_PRIVS" && PRIVS_CHANGED=false
+}
+
+# Create a group with the given members (JSON array) and remember it for
+# the cleanup.
+create_group() {
+    rpc "UserMgmt" "setGroup" "$(jq -n --arg name "$1" --argjson members "$2" \
+        '{name:$name,comment:"test-rpc.sh",members:$members}')" >/dev/null \
+        || return 1
+    TEST_GROUPS+=("$1")
+}
+
+delete_groups() {
+    local g
+    for g in "${TEST_GROUPS[@]}"; do
+        rpc "UserMgmt" "deleteGroup" "{\"name\":\"$g\"}" &>/dev/null || true
+    done
+    TEST_GROUPS=()
+}
+
+# Run setShare (edit) for the test share; succeeds if the RPC succeeds.
+edit_share() {
+    omv-rpc -u admin "Sftp" "setShare" "$(jq -n \
+        --arg uuid "$SHARE_UUID" --arg sfref "$SF_REF" --arg user "$TEST_USER" \
+        '{uuid:$uuid,sharedfolderref:$sfref,username:$user}')" &>/dev/null
+}
+
+# Print the mount ID / options of a mount point, empty if not mounted.
+mount_id()   { findmnt -n -o ID --mountpoint "$1" 2>/dev/null | tail -1; }
+mount_opts() { findmnt -n -o OPTIONS --mountpoint "$1" 2>/dev/null | tail -1; }
+
+assert_mounted() {
+    if mountpoint -q "$2" 2>/dev/null; then
+        _pass "$1"
+    else
+        _fail "$1" "not mounted: $2"
+    fi
+}
+
+assert_not_mounted() {
+    if mountpoint -q "$2" 2>/dev/null; then
+        _fail "$1" "still mounted: $2"
+    elif [ -e "$2" ]; then
+        _fail "$1" "mount point directory still present: $2"
+    else
+        _pass "$1"
+    fi
+}
+
 # ---------------------------------------------------------------------------
 # State
 # ---------------------------------------------------------------------------
@@ -136,6 +212,13 @@ SF_COMMENT=""
 SF_MODE=""
 SF_PATH_CHANGED=false
 NEW_PATH_DIR=""
+ORIG_PRIVS=""
+PRIVS_CHANGED=false
+SETTINGS_CHANGED=false
+declare -a TEST_GROUPS=()
+DEV_SF_UUID=""
+DEV_SF_PATH=""
+REMOVE_TEST_DIR=""
 
 LIST_PARAMS='{"start":0,"limit":null,"sortfield":null,"sortdir":null}'
 OMV_NEW_UUID=$(. /etc/default/openmediavault 2>/dev/null; \
@@ -151,6 +234,32 @@ cleanup() {
         info "Deleting test share $SHARE_UUID"
         rpc "Sftp" "deleteShare" "{\"uuid\":\"$SHARE_UUID\"}" &>/dev/null || true
         SHARE_UUID=""
+    fi
+
+    if [ -n "$REMOVE_TEST_DIR" ]; then
+        info "Removing test directory $REMOVE_TEST_DIR"
+        rm -rf "$REMOVE_TEST_DIR" 2>/dev/null || true
+        REMOVE_TEST_DIR=""
+    fi
+
+    if [ -n "$DEV_SF_UUID" ]; then
+        info "Deleting temporary shared folder 'dev'"
+        rpc "ShareMgmt" "delete" "{\"uuid\":\"$DEV_SF_UUID\",\"recursive\":false}" \
+            &>/dev/null || true
+        [ -n "$DEV_SF_PATH" ] && rmdir "$DEV_SF_PATH" 2>/dev/null || true
+        DEV_SF_UUID=""
+    fi
+
+    local redeploy=false
+    if $PRIVS_CHANGED; then
+        info "Restoring original shared folder privileges"
+        restore_privileges &>/dev/null || true
+        redeploy=true
+    fi
+
+    if [ ${#TEST_GROUPS[@]} -gt 0 ]; then
+        info "Deleting temporary groups: ${TEST_GROUPS[*]}"
+        delete_groups
     fi
 
     if [ -n "$NEW_PATH_DIR" ]; then
@@ -180,6 +289,12 @@ cleanup() {
         local restore
         restore=$(echo "$ORIG_SETTINGS" | jq 'del(.shares)' 2>/dev/null || echo "")
         [ -n "$restore" ] && rpc "Sftp" "setSettings" "$restore" &>/dev/null || true
+        $SETTINGS_CHANGED && redeploy=true
+    fi
+
+    if $redeploy; then
+        info "Redeploying the restored configuration"
+        deploy_dirty &>/dev/null || true
     fi
 
     info "Done."
@@ -251,6 +366,13 @@ SF_COMMENT=$(echo "$SF_JSON"   | jq -r '.comment    // ""')
 SF_MODE=$(echo "$SF_JSON"      | jq -r '.mode       // "775"')
 _pass "shared folder found: $SF_NAME ($SF_REF)"
 
+# Remember the original privileges, the privilege tests replace them and
+# they are restored from this on exit.
+ORIG_PRIVS=$(echo "$SF_JSON" | jq -c '
+    .privileges.privilege // []
+    | if type == "object" then [.] else . end
+    | map({type, name, perms: (.perms | tonumber)})' 2>/dev/null || echo "")
+
 # Verify user exists on this system
 if id "$TEST_USER" &>/dev/null; then
     _pass "user exists: $TEST_USER"
@@ -267,6 +389,12 @@ if echo "$SF_JSON" | jq -e \
          | .[] | select(.name == $u and (.perms == 5 or .perms == 7))' \
         &>/dev/null; then
     _pass "user '$TEST_USER' has read/write privileges on '$SF_NAME'"
+    # Only touch the privileges if they could be read back completely.
+    if ! echo "$ORIG_PRIVS" | jq -e --arg u "$TEST_USER" \
+            'any(.[]; .type == "user" and .name == $u)' &>/dev/null; then
+        info "Could not read the original privileges — privilege tests will be skipped"
+        ORIG_PRIVS=""
+    fi
 else
     echo -e "\n${RED}User '$TEST_USER' lacks read or read-write privileges on '$SF_NAME' — aborting.${NC}" >&2
     echo "  Grant via OMV → Access Rights Management → Shared Folders → Privileges." >&2
@@ -418,6 +546,50 @@ else
     info "Skipping duplicate-pair test — no test share was created"
 fi
 
+# A shared folder named 'dev' would be mounted onto the directory holding
+# the rsyslog socket of the chroot, so it must be rejected.  Use an existing
+# 'dev' shared folder or create a temporary one next to the test folder.
+DEV_REF=$(rpc "ShareMgmt" "getList" "$LIST_PARAMS" 2>/dev/null \
+    | jq -r '.data[] | select(.name == "dev") | .uuid' | head -1)
+if [ -z "$DEV_REF" ]; then
+    DEV_RESULT=$(rpc "ShareMgmt" "set" "$(jq -n \
+        --arg uuid "$OMV_NEW_UUID" --arg mntentref "$SF_MNTENTREF" \
+        --arg reldirpath "sftprpctest_dev_$$/" \
+        '{uuid:$uuid,name:"dev",mntentref:$mntentref,reldirpath:$reldirpath,
+          comment:"test-rpc.sh",mode:"775"}')" 2>&1) || DEV_RESULT=""
+    DEV_SF_UUID=$(echo "$DEV_RESULT" | jq -r '.uuid // ""' 2>/dev/null || echo "")
+    if [ -n "$DEV_SF_UUID" ]; then
+        DEV_SF_PATH=$(rpc "ShareMgmt" "getPath" "{\"uuid\":\"$DEV_SF_UUID\"}" \
+            2>/dev/null | jq -r '.' 2>/dev/null || echo "")
+        DEV_REF="$DEV_SF_UUID"
+    fi
+fi
+if [ -n "$DEV_REF" ]; then
+    DEV_OUT=$(omv-rpc -u admin "Sftp" "setShare" "$(jq -n \
+        --arg uuid "$OMV_NEW_UUID" --arg sfref "$DEV_REF" --arg user "$TEST_USER" \
+        '{uuid:$uuid,sharedfolderref:$sfref,username:$user}')" 2>&1) \
+        && DEV_EC=0 || DEV_EC=$?
+    if [ $DEV_EC -ne 0 ] && echo "$DEV_OUT" | grep -q "named 'dev'"; then
+        _pass "setShare — shared folder named 'dev' rejected"
+    else
+        _fail "setShare — shared folder named 'dev' rejected" "${DEV_OUT:0:200}"
+        # Remove the share that should not have been created.
+        DEV_SHARE=$(echo "$DEV_OUT" | jq -r '.uuid // ""' 2>/dev/null || echo "")
+        [ -n "$DEV_SHARE" ] && rpc "Sftp" "deleteShare" \
+            "{\"uuid\":\"$DEV_SHARE\"}" &>/dev/null || true
+    fi
+    if [ -n "$DEV_SF_UUID" ]; then
+        rpc "ShareMgmt" "delete" "{\"uuid\":\"$DEV_SF_UUID\",\"recursive\":false}" \
+            &>/dev/null || true
+        [ -n "$DEV_SF_PATH" ] && rmdir "$DEV_SF_PATH" 2>/dev/null || true
+        DEV_SF_UUID=""
+        DEV_SF_PATH=""
+    fi
+else
+    _fail "setShare — shared folder named 'dev' rejected" \
+        "could not create a temporary shared folder named 'dev'"
+fi
+
 # ===========================================================================
 section "Integration — deploy and bind mount"
 # ===========================================================================
@@ -436,6 +608,28 @@ else
         _pass "bind mount created: $BIND_MNT"
     else
         _fail "bind mount not created at $BIND_MNT"
+    fi
+
+    # =======================================================================
+    section "Regression — deploy does not remount an unchanged bind mount"
+    # =======================================================================
+    #
+    # A bind mount shows up as '<device>[<subdir>]' in findmnt, so comparing
+    # its SOURCE with the shared folder path always differed and every deploy
+    # unmounted and remounted it, breaking active sessions.
+
+    if mountpoint -q "$BIND_MNT" 2>/dev/null; then
+        ID_BEFORE=$(mount_id "$BIND_MNT")
+        deploy_dirty
+        ID_AFTER=$(mount_id "$BIND_MNT")
+        if [ -n "$ID_BEFORE" ] && [ "$ID_BEFORE" = "$ID_AFTER" ]; then
+            _pass "bind mount kept across deploy (mount ID $ID_BEFORE)"
+        else
+            _fail "bind mount was remounted by deploy" \
+                "mount ID before='$ID_BEFORE' after='$ID_AFTER'"
+        fi
+    else
+        info "Skipping remount regression — bind mount not active"
     fi
 
     # =======================================================================
@@ -550,6 +744,300 @@ sys.exit(1)
     fi
 
     # =======================================================================
+    section "Regression — shared folder rename removes stale bind mount"
+    # =======================================================================
+    #
+    # Renaming the shared folder changes the mount point below /sftp. The
+    # mount point with the old name must be unmounted and removed, otherwise
+    # the user keeps access through it until the next reboot.  The new name
+    # contains a space, which must be escaped as \040 in /etc/fstab only.
+
+    if mountpoint -q "$BIND_MNT" 2>/dev/null; then
+        NEW_SF_NAME="${SF_NAME} sftprpctest $$"
+        NEW_BIND_MNT="/sftp/${TEST_USER}/${NEW_SF_NAME}"
+        SF_RENAME=$(rpc "ShareMgmt" "set" "$(jq -n \
+            --arg uuid       "$SF_REF"          \
+            --arg name       "$NEW_SF_NAME"     \
+            --arg mntentref  "$SF_MNTENTREF"    \
+            --arg reldirpath "$SF_RELDIRPATH"   \
+            --arg comment    "$SF_COMMENT"      \
+            --arg mode       "$SF_MODE"         \
+            '{uuid:$uuid,name:$name,mntentref:$mntentref,
+              reldirpath:$reldirpath,comment:$comment,mode:$mode}')" \
+            2>&1) && SF_REN_EC=0 || SF_REN_EC=$?
+
+        if [ $SF_REN_EC -ne 0 ]; then
+            info "Skipping rename regression — shared folder could not be renamed: ${SF_RENAME:0:200}"
+        else
+            # Let the cleanup handler restore the original name on failure.
+            SF_PATH_CHANGED=true
+            deploy_dirty
+
+            if mountpoint -q "$NEW_BIND_MNT" 2>/dev/null; then
+                _pass "rename regression — bind mount created: $NEW_BIND_MNT"
+            else
+                _fail "rename regression — bind mount not created at $NEW_BIND_MNT"
+            fi
+            if mountpoint -q "$BIND_MNT" 2>/dev/null || [ -e "$BIND_MNT" ]; then
+                _fail "rename regression — stale mount point still present: $BIND_MNT"
+            else
+                _pass "rename regression — stale mount point removed"
+            fi
+
+            FSTAB_TARGET=$(printf '%s' "$NEW_BIND_MNT" | sed 's/ /\\040/g')
+            # ENVIRON, unlike 'awk -v', does not process backslash escapes.
+            FSTAB_COUNT=$(T="$FSTAB_TARGET" awk '$2 == ENVIRON["T"]' /etc/fstab | wc -l)
+            if [ "$FSTAB_COUNT" -eq 1 ]; then
+                _pass "space in name — exactly one fstab entry with \\040"
+            else
+                _fail "space in name — expected one fstab entry for '$FSTAB_TARGET'" \
+                    "found $FSTAB_COUNT"
+            fi
+            if find "/sftp/${TEST_USER}" -mindepth 1 -maxdepth 1 \
+                    -name '*\\040*' 2>/dev/null | grep -q .; then
+                _fail "space in name — directory with a literal '\\040' created"
+            else
+                _pass "space in name — no directory with a literal '\\040'"
+            fi
+
+            info "Restoring original shared folder name ($SF_NAME) ..."
+            rpc "ShareMgmt" "set" "$(jq -n \
+                --arg uuid       "$SF_REF"       \
+                --arg name       "$SF_NAME"      \
+                --arg mntentref  "$SF_MNTENTREF" \
+                --arg reldirpath "$SF_RELDIRPATH" \
+                --arg comment    "$SF_COMMENT"   \
+                --arg mode       "$SF_MODE"      \
+                '{uuid:$uuid,name:$name,mntentref:$mntentref,
+                  reldirpath:$reldirpath,comment:$comment,mode:$mode}')" \
+                &>/dev/null || true
+            SF_PATH_CHANGED=false
+            deploy_dirty &>/dev/null || true
+
+            if [ -e "$NEW_BIND_MNT" ]; then
+                _fail "rename regression — renamed mount point not removed after restore: $NEW_BIND_MNT"
+            else
+                _pass "rename regression — renamed mount point removed after restore"
+            fi
+        fi
+    else
+        info "Skipping rename regression — bind mount not active"
+    fi
+
+    # =======================================================================
+    section "Logging — chrooted sessions are logged to the journal"
+    # =======================================================================
+    #
+    # rsyslog creates a socket inside every chroot and passes the messages
+    # on to the journal; the 'sftp' log viewer reads them from there.
+
+    LOG_SOCK="/sftp/${TEST_USER}/dev/log"
+    RSYSLOG_CONF="/etc/rsyslog.d/openmediavault-sftp.conf"
+    set_settings '.rsyslog = true'
+    deploy_dirty
+
+    if [ -S "$LOG_SOCK" ]; then
+        _pass "rsyslog socket created: $LOG_SOCK"
+    else
+        _fail "rsyslog socket not created: $LOG_SOCK"
+    fi
+    if grep -q 'Ruleset="omv_sftp"' "$RSYSLOG_CONF" 2>/dev/null \
+            && grep -q 'type="omjournal"' "$RSYSLOG_CONF" 2>/dev/null; then
+        _pass "rsyslog config passes the messages on to the journal"
+    else
+        _fail "rsyslog config does not pass the messages on to the journal"
+    fi
+
+    if [ -S "$LOG_SOCK" ]; then
+        # Log like internal-sftp does, with a known PID and a unique message.
+        PROBE="test-rpc.sh probe $$-$RANDOM"
+        logger -u "$LOG_SOCK" -t internal-sftp --id=$$ -p authpriv.info "$PROBE"
+        PROBE_JSON=""
+        for _ in 1 2 3 4 5 6 7 8 9 10; do
+            PROBE_JSON=$(journalctl --quiet --no-pager --output=json \
+                --identifier=internal-sftp --since=-10min 2>/dev/null \
+                | jq -c --arg m "$PROBE" 'select(.MESSAGE == $m)' | tail -1)
+            [ -n "$PROBE_JSON" ] && break
+            sleep 1
+        done
+        if [ -n "$PROBE_JSON" ]; then
+            _pass "message from the chroot socket arrived in the journal"
+            [ "$(echo "$PROBE_JSON" | jq -r '.SYSLOG_PID // ""')" = "$$" ] \
+                && _pass "journal entry has the session PID ($$)" \
+                || _fail "journal entry has the wrong PID" \
+                    "$(echo "$PROBE_JSON" | jq -c '{SYSLOG_PID,_PID}')"
+            [ "$(echo "$PROBE_JSON" | jq -r '.SYSLOG_FACILITY // ""')" = "10" ] \
+                && _pass "journal entry has the authpriv facility" \
+                || _fail "journal entry has the wrong facility" \
+                    "$(echo "$PROBE_JSON" | jq -c '{SYSLOG_FACILITY}')"
+        else
+            _fail "message from the chroot socket not found in the journal"
+        fi
+
+        LOG_LIST=$(rpc "LogFile" "getList" \
+            '{"start":0,"limit":null,"sortfield":null,"sortdir":null,"id":"sftp"}' \
+            2>&1) || LOG_LIST=""
+        if echo "$LOG_LIST" | jq -e --arg m "$PROBE" --arg p "[$$]:" \
+                'any(.data[]; (.message | contains($m)) and (.message | contains($p)))' \
+                &>/dev/null; then
+            _pass "log viewer (LogFile getList sftp) shows the message with the session PID"
+        else
+            _fail "log viewer (LogFile getList sftp) does not show the message" \
+                "${LOG_LIST:0:200}"
+        fi
+    fi
+
+    # =======================================================================
+    section "Logging — disabling rsyslog removes the sockets"
+    # =======================================================================
+
+    set_settings '.rsyslog = false'
+    deploy_dirty
+
+    if [ -e "$RSYSLOG_CONF" ]; then
+        _fail "rsyslog config still present: $RSYSLOG_CONF"
+    else
+        _pass "rsyslog config removed"
+    fi
+    if [ -e "$LOG_SOCK" ] || [ -e "/sftp/${TEST_USER}/dev" ]; then
+        _fail "rsyslog socket or dev directory still present below /sftp/${TEST_USER}"
+    else
+        _pass "rsyslog socket and dev directory removed"
+    fi
+    assert_mounted "bind mount kept when disabling rsyslog" "$BIND_MNT"
+
+    # =======================================================================
+    section "sshd configuration and service unit"
+    # =======================================================================
+
+    SSHD_CONF="/etc/ssh/omv_sftp_config"
+    set_settings '.extraoptions = "MaxSessions 7" | .allowgroups = true'
+    deploy_dirty
+
+    if /usr/sbin/sshd -t -f "$SSHD_CONF" &>/dev/null; then
+        _pass "sshd -t accepts $SSHD_CONF"
+    else
+        _fail "sshd -t rejects $SSHD_CONF" \
+            "$(/usr/sbin/sshd -t -f "$SSHD_CONF" 2>&1 | head -3)"
+    fi
+    if grep -qE '^[[:space:]]*(Protocol|ChallengeResponseAuthentication)[[:space:]]' "$SSHD_CONF" \
+            || grep -q 'ssh_host_dsa_key' "$SSHD_CONF"; then
+        _fail "obsolete options (Protocol, ChallengeResponseAuthentication, DSA key) present"
+    else
+        _pass "no obsolete options (Protocol, ChallengeResponseAuthentication, DSA key)"
+    fi
+    grep -q '^KbdInteractiveAuthentication ' "$SSHD_CONF" \
+        && _pass "KbdInteractiveAuthentication set" \
+        || _fail "KbdInteractiveAuthentication missing"
+
+    LINE_ALLOW=$(grep -n '^AllowGroups ' "$SSHD_CONF" | head -1 | cut -d: -f1)
+    LINE_EXTRA=$(grep -n '^MaxSessions 7$' "$SSHD_CONF" | head -1 | cut -d: -f1)
+    LINE_MATCH=$(grep -n '^Match Group ' "$SSHD_CONF" | head -1 | cut -d: -f1)
+    if [ -n "$LINE_ALLOW" ] && [ -n "$LINE_EXTRA" ] && [ -n "$LINE_MATCH" ] \
+            && [ "$LINE_ALLOW" -lt "$LINE_EXTRA" ] && [ "$LINE_EXTRA" -lt "$LINE_MATCH" ]; then
+        _pass "order: AllowGroups, extra options, Match block"
+    else
+        _fail "wrong order of AllowGroups/extra options/Match" \
+            "AllowGroups=$LINE_ALLOW extra=$LINE_EXTRA Match=$LINE_MATCH"
+    fi
+
+    systemctl show omv-sftp -p RuntimeDirectory --value 2>/dev/null | grep -qw sshd \
+        && _pass "omv-sftp.service creates /run/sshd" \
+        || _fail "omv-sftp.service does not set RuntimeDirectory=sshd"
+    systemctl show omv-sftp -p ExecStartPre --value 2>/dev/null | grep -q 'sshd.* -t ' \
+        && _pass "omv-sftp.service checks the config before starting" \
+        || _fail "omv-sftp.service has no 'sshd -t' ExecStartPre"
+
+    set_settings '.'
+    deploy_dirty &>/dev/null || true
+
+    # =======================================================================
+    section "Privileges — revoked, group, denied"
+    # =======================================================================
+    #
+    # The effective privileges follow the SMB rules: 'No access' for the
+    # user or one of its groups wins, then read/write, then read only.
+    # Entries are matched by type, a group named like the user does not
+    # grant the user anything.
+
+    if [ -z "$ORIG_PRIVS" ]; then
+        info "Skipping privilege tests — original privileges unknown"
+    elif ! mountpoint -q "$BIND_MNT" 2>/dev/null; then
+        info "Skipping privilege tests — bind mount not active"
+    else
+        # Revoked: the mount point must go away, and come back on restore.
+        set_privileges "$(jq -nc --arg u "$TEST_USER" \
+            '[{type:"user",name:$u,perms:0}]')"
+        deploy_dirty
+        assert_not_mounted "revoked — bind mount and directory removed" "$BIND_MNT"
+        edit_share \
+            && _fail "revoked — setShare accepted a user without privileges" \
+            || _pass "revoked — setShare rejects the user"
+
+        restore_privileges
+        deploy_dirty
+        assert_mounted "revoked — bind mount restored with the privileges" "$BIND_MNT"
+
+        TEST_GROUP="sftprpct$$"
+        if create_group "$TEST_GROUP" "$(jq -nc --arg u "$TEST_USER" '[$u]')" \
+                && id -nG "$TEST_USER" | tr ' ' '\n' | grep -qx "$TEST_GROUP"; then
+            _pass "temporary group '$TEST_GROUP' with member '$TEST_USER' created"
+
+            # Read/write through a group only.
+            set_privileges "$(jq -nc --arg g "$TEST_GROUP" \
+                '[{type:"group",name:$g,perms:7}]')"
+            edit_share \
+                && _pass "group rw — setShare accepts access through a group" \
+                || _fail "group rw — setShare rejects access through a group"
+            deploy_dirty
+            assert_mounted "group rw — bind mount present" "$BIND_MNT"
+            mount_opts "$BIND_MNT" | grep -q '^rw' \
+                && _pass "group rw — mounted read/write" \
+                || _fail "group rw — not mounted read/write" "$(mount_opts "$BIND_MNT")"
+
+            # Read only through a group.
+            set_privileges "$(jq -nc --arg g "$TEST_GROUP" \
+                '[{type:"group",name:$g,perms:5}]')"
+            deploy_dirty
+            mount_opts "$BIND_MNT" | grep -q '^ro' \
+                && _pass "group ro — mounted read only" \
+                || _fail "group ro — not mounted read only" "$(mount_opts "$BIND_MNT")"
+
+            # 'No access' for a group wins over read/write for the user.
+            set_privileges "$(jq -nc --arg u "$TEST_USER" --arg g "$TEST_GROUP" \
+                '[{type:"user",name:$u,perms:7},{type:"group",name:$g,perms:0}]')"
+            edit_share \
+                && _fail "deny wins — setShare accepted a user denied through a group" \
+                || _pass "deny wins — setShare rejects a user denied through a group"
+            deploy_dirty
+            assert_not_mounted "deny wins — bind mount removed" "$BIND_MNT"
+        else
+            _fail "could not create temporary group '$TEST_GROUP' with member '$TEST_USER'"
+        fi
+
+        # A group with the same name as the user, which the user is not a
+        # member of, must not be mistaken for the user's own entry.
+        if getent group "$TEST_USER" &>/dev/null; then
+            info "Skipping type-match test — a group named '$TEST_USER' already exists"
+        elif create_group "$TEST_USER" '[]'; then
+            set_privileges "$(jq -nc --arg u "$TEST_USER" \
+                '[{type:"group",name:$u,perms:7}]')"
+            edit_share \
+                && _fail "type match — group named like the user granted access" \
+                || _pass "type match — group named like the user grants no access"
+            deploy_dirty
+            assert_not_mounted "type match — no bind mount" "$BIND_MNT"
+        else
+            info "Skipping type-match test — could not create a group named '$TEST_USER'"
+        fi
+
+        restore_privileges
+        delete_groups
+        deploy_dirty
+        assert_mounted "privileges restored — bind mount present" "$BIND_MNT"
+    fi
+
+    # =======================================================================
     section "Share — delete and verify cleanup"
     # =======================================================================
 
@@ -564,6 +1052,12 @@ sys.exit(1)
         _fail "bind mount still present after deleteShare: $BIND_MNT"
     fi
 
+    if [ ! -e "$BIND_MNT" ]; then
+        _pass "mount point directory removed after deleteShare"
+    else
+        _fail "mount point directory still present after deleteShare: $BIND_MNT"
+    fi
+
     assert_rpc_fails "getShare after deleteShare" "Sftp" "getShare" \
         "{\"uuid\":\"$DELETED_UUID\"}"
 
@@ -576,6 +1070,44 @@ sys.exit(1)
     else
         _pass "getShareList — deleted share absent"
     fi
+fi
+
+# ===========================================================================
+section "omv-removesftpmount never deletes data"
+# ===========================================================================
+
+if ! command -v omv-removesftpmount &>/dev/null; then
+    info "omv-removesftpmount not installed — skipping"
+else
+    RM_DIR="/sftp/sftprpctest_$$"
+    REMOVE_TEST_DIR="$RM_DIR"
+    mkdir -p "$RM_DIR/full" "$RM_DIR/empty"
+    echo "user data" > "$RM_DIR/full/file"
+
+    if omv-removesftpmount "$RM_DIR/full" &>/dev/null; then
+        _fail "non-empty directory — reported success"
+    else
+        _pass "non-empty directory — refused"
+    fi
+    [ -f "$RM_DIR/full/file" ] \
+        && _pass "non-empty directory — content kept" \
+        || _fail "non-empty directory — content deleted"
+
+    omv-removesftpmount "$RM_DIR/empty" &>/dev/null \
+        && [ ! -e "$RM_DIR/empty" ] \
+        && _pass "empty directory — removed" \
+        || _fail "empty directory — not removed"
+
+    # Paths outside of /sftp are ignored.
+    OUTSIDE_DIR=$(mktemp -d)
+    omv-removesftpmount "$OUTSIDE_DIR" &>/dev/null || true
+    [ -d "$OUTSIDE_DIR" ] \
+        && _pass "path outside of /sftp — ignored" \
+        || _fail "path outside of /sftp — removed"
+    rmdir "$OUTSIDE_DIR" 2>/dev/null || true
+
+    rm -rf "$RM_DIR"
+    REMOVE_TEST_DIR=""
 fi
 
 # ===========================================================================
