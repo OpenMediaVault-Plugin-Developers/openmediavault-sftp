@@ -162,10 +162,17 @@ create_group() {
     TEST_GROUPS+=("$1")
 }
 
+# UserMgmt.deleteGroup runs 'delgroup --only-if-empty' and silently keeps
+# a group that still has members, so remove the members first.
 delete_groups() {
     local g
     for g in "${TEST_GROUPS[@]}"; do
+        rpc "UserMgmt" "setGroup" "$(jq -n --arg name "$g" \
+            '{name:$name,comment:"test-rpc.sh",members:[]}')" &>/dev/null || true
         rpc "UserMgmt" "deleteGroup" "{\"name\":\"$g\"}" &>/dev/null || true
+        if getent group "$g" &>/dev/null; then
+            info "Could not delete temporary group '$g' — remove it manually"
+        fi
     done
     TEST_GROUPS=()
 }
